@@ -1,0 +1,163 @@
+{% extends "admin_base.html" %}
+
+{% block main %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2>Manage Examinations</h2>
+            <p>Create and manage examinations .....</p>
+        </div>
+        <div class="badge text-bg-primary">Total Courses: {{ exams|length }}</div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <h5>{{ "Edit Examination" if edit_exam else "Create Examination" }}</h5>
+            <form action="{{ url_for("manage_exams", edit_id=edit_exam.id) if edit_exam else url_for("manage_exams") }}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-4">
+                        <label for="Input1" class="form-label">Examination Name</label>
+                        <input type="text" class="form-control" id="Input1" name="name" value="{{ edit_exam.name if edit_exam else "" }}" required>
+                    </div>
+                    
+                    <div class="mb-3 col-4">
+                        <label for="Input2" class="form-label">Examination Type</label>
+                        <select class="form-select" aria-label="Default select example" name="type" value="{{ edit_exam.type if edit_exam else "" }}" required>
+                            <option value="">Examination Type</option>
+                            {% for type in ["Viva","Practical","Demo","Assesment"] %}
+                                <option value="{{ type }}" {% if edit_exam and edit_exam.type == type %}selected{% endif %}>
+                                    {{ type }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-4">
+                        <label class="mb-2">Examiner</label>
+                        <select class="form-select" aria-label="Default select example" name="examiner_id" value="{{ edit_exam.examiner_id if edit_exam else "" }}" required>
+                            <option value="">Select examiner</option>
+                            {% for examiner in examiners %}
+                                <option value="{{ examiner.id }}" {% if edit_exam and edit_exam.examiner_id == examiner.id %}selected{% endif %}>
+                                    {{ examiner.user.username }} - {{ examiner.department }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label class="mb-2">Course</label>
+                        <select class="form-select" aria-label="Default select example" name="course_id" value="{{ edit_exam.course_id if edit_exam else "" }}" required>
+                            <option value="">Select course</option>
+                            {% for course in courses %}
+                                <option value="{{ course.id }}" {% if edit_exam and edit_exam.course_id == course.id %}selected{% endif %}>
+                                    {{ course.code }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input3" class="form-label">Duration (minutes)</label>
+                        <input type="number" class="form-control" id="Input3" name="duration" value="{{ edit_exam.duration if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input4" class="form-label">Maximum Marks</label>
+                        <input type="number" class="form-control" id="Input4" name="max_marks" value="{{ edit_exam.max_marks if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input5" class="form-label">Slot Creation Start Date</label>
+                        <input type="date" class="form-control" id="Input5" name="scsd" value="{{ edit_exam.scsd if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input6" class="form-label">Slot Creation End Date</label>
+                        <input type="date" class="form-control" id="Input6" name="sced" value="{{ edit_exam.sced if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input7" class="form-label">Slot Booking Start Date</label>
+                        <input type="date" class="form-control" id="Input7" name="sbsd" value="{{ edit_exam.sbsd if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input8" class="form-label">Slot Booking End Date</label>
+                        <input type="date" class="form-control" id="Input8" name="sbed" value="{{ edit_exam.sbed if edit_exam else "" }}" placeholder="Enter course name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" aria-label="Default select example" name="status" required>
+                            <option value="">Select status</option>
+                            {% for status in ["Draft","Slot Creation","Booking Open","Closed","Completed"] %}
+                                <option value="{{ status }}" {% if edit_exam and edit_exam.status == status %}selected{% endif %}>
+                                    {{ status }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="submit" class="btn btn-primary" value="{{ "Update Examination" if edit_exam else "Create Examination" }}">
+                    {% if edit_exam %}
+                        <a href="{{ url_for('manage_exams') }}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Examinations</h5>
+            <form action="{{ url_for("manage_exams") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by name, course_code, type or Id">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_exams") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Exam Id</th>
+                        <th>Course Code</th>
+                        <th>Examination</th>
+                        <th>Exam Type</th>
+                        <th>Duration</th>
+                        <th>Max Marks</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for exam in exams %}
+                    <tr>
+                        <td>{{ exam.id }}</td>
+                        <td>{{ exam.course.code }}</td>
+                        <td>{{ exam.name }}</td>
+                        <td>{{ exam.type }}</td>
+                        <td>{{ exam.duration }}</td>
+                        <td>{{ exam.max_marks }}</td>
+                        <td>{{ exam.status }}</td>
+                        <td>
+                            <a href="{{ url_for("manage_exams", edit_id=exam.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_exam', exam_id=exam.id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Delete this examination?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

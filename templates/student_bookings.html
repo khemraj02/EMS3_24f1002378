@@ -1,0 +1,284 @@
+{% extends "student_base.html" %}
+
+{% block main %}
+<div class="mb-3">
+    <h2>Your Bookings</h2>
+    <p class="text-secondary">Yh;kk</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-4">
+        hh;h
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-3">
+        <h5>Booking History</h5>
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Examination</th>
+                    <th>Course</th>
+                    <th>Exam Date</th>
+                    <th>Timing</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for book in bookings %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ book.slot.exam.name }}</td>
+                    <td>f</td>
+                    <td>f</td>
+                    <td>f</td>
+                    <td>f</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<template id="student-bookings-overview">
+    <section>
+        <h2>Student Booking Management</h2>
+        <p>This section contains information about examination bookings made by students through the examination management portal.</p>
+        <p>Students can use the booking history section to review their examination schedules and check the current status of their submitted bookings.</p>
+        <p>Every booking should be associated with the correct examination, course, examination date, and allocated time slot.</p>
+    </section>
+</template>
+
+<template id="booking-history-information">
+    <section>
+        <h2>Booking History Information</h2>
+        <p>The booking history provides a record of examination booking activities performed by the student.</p>
+        <p>Students should regularly review their booking records to confirm that their examination details are correct.</p>
+        <p>Booking history may be useful when checking examination schedules, verifying previous registrations, and resolving booking-related questions.</p>
+        <ul>
+            <li>Review the examination name.</li>
+            <li>Verify the associated course.</li>
+            <li>Check the examination date.</li>
+            <li>Review the allocated examination timing.</li>
+            <li>Confirm the booking status.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-examination-details">
+    <section>
+        <h2>Examination Details</h2>
+        <p>Each booking is associated with an examination available in the examination management system.</p>
+        <p>The examination name identifies the assessment for which the student has submitted a booking request.</p>
+        <p>Students should verify the examination title carefully before attending the scheduled assessment.</p>
+        <p>If an examination name appears incorrect or incomplete, the student should contact the examination administrator.</p>
+    </section>
+</template>
+
+<template id="booking-course-details">
+    <section>
+        <h2>Course Information</h2>
+        <p>Course information helps students identify the academic subject associated with an examination booking.</p>
+        <p>Students should verify that the examination belongs to the correct course or subject.</p>
+        <p>Incorrect course information should be reported to the appropriate college examination authority.</p>
+        <p>Course details should be maintained accurately to avoid confusion during examination scheduling and record verification.</p>
+    </section>
+</template>
+
+<template id="booking-examination-date">
+    <section>
+        <h2>Examination Date Information</h2>
+        <p>The examination date indicates the scheduled day on which the assessment is expected to take place.</p>
+        <p>Students should check the examination date carefully and maintain a personal record of upcoming examinations.</p>
+        <ul>
+            <li>Check the scheduled examination date.</li>
+            <li>Review any official schedule updates.</li>
+            <li>Avoid relying on outdated examination information.</li>
+            <li>Contact the examination department if conflicting dates appear.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-time-information">
+    <section>
+        <h2>Examination Timing</h2>
+        <p>Examination timing identifies the allocated time period for a particular examination booking.</p>
+        <p>Students should arrive at the examination location according to the official instructions provided by the institution.</p>
+        <p>Before attending an examination, students should confirm the reporting time and any additional instructions issued by the examination authority.</p>
+        <p>Any discrepancy in the allocated timing should be reported before the examination date.</p>
+    </section>
+</template>
+
+<template id="booking-status-information">
+    <section>
+        <h2>Booking Status Information</h2>
+        <p>The booking status represents the current state of an examination booking record.</p>
+        <p>Students should refer to the status displayed in their booking history and follow official instructions from the examination department.</p>
+        <p>Booking status information should be reviewed regularly, especially before an upcoming examination.</p>
+        <ul>
+            <li>Check whether the booking has been confirmed.</li>
+            <li>Review any pending booking information.</li>
+            <li>Check whether an examination booking has been cancelled.</li>
+            <li>Contact the administrator if the displayed status is unclear.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-verification-guidelines">
+    <section>
+        <h2>Booking Verification Guidelines</h2>
+        <p>Booking verification helps students ensure that the information recorded in the portal matches their examination requirements.</p>
+        <p>Students should carefully review all available booking details after submitting a booking request.</p>
+        <ol>
+            <li>Open the student booking history.</li>
+            <li>Locate the relevant examination record.</li>
+            <li>Verify the examination name.</li>
+            <li>Review the course information.</li>
+            <li>Confirm the examination date and timing.</li>
+            <li>Check the current booking status.</li>
+            <li>Report any incorrect information to the examination administrator.</li>
+        </ol>
+    </section>
+</template>
+
+<template id="booking-record-accuracy">
+    <section>
+        <h2>Booking Record Accuracy</h2>
+        <p>Accurate booking records are important for maintaining a reliable examination management process.</p>
+        <p>Students should ensure that their examination information is reviewed carefully and that any discrepancies are reported promptly.</p>
+        <p>Administrators should maintain consistent examination details and verify booking records before publishing official schedules.</p>
+        <p>Accurate records help reduce scheduling conflicts and improve communication between students and examination authorities.</p>
+    </section>
+</template>
+
+<template id="booking-preparation-guidelines">
+    <section>
+        <h2>Examination Preparation Guidelines</h2>
+        <p>Students should prepare for examinations according to their published examination schedule.</p>
+        <ul>
+            <li>Review the examination timetable regularly.</li>
+            <li>Prepare the required study materials.</li>
+            <li>Confirm the examination location.</li>
+            <li>Keep the required identity documents ready.</li>
+            <li>Arrive before the reporting time.</li>
+            <li>Follow the instructions provided by the examination authority.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-attendance-information">
+    <section>
+        <h2>Examination Attendance</h2>
+        <p>Students are responsible for attending examinations according to their officially assigned schedules.</p>
+        <p>A booking record should not be treated as a replacement for official examination instructions.</p>
+        <p>Students should follow the institution's attendance rules and examination procedures.</p>
+        <p>Any unavoidable absence or scheduling issue should be communicated to the examination department according to institutional policy.</p>
+    </section>
+</template>
+
+<template id="booking-cancellation-information">
+    <section>
+        <h2>Booking Cancellation Information</h2>
+        <p>Booking cancellation procedures are governed by the rules established by the institution.</p>
+        <p>Students should contact the examination administrator when they need assistance with a booking cancellation or correction.</p>
+        <p>Students should not assume that a booking has been cancelled unless the official booking record or examination authority confirms the change.</p>
+        <p>Any cancellation request should be submitted according to the applicable institutional guidelines.</p>
+    </section>
+</template>
+
+<template id="booking-schedule-changes">
+    <section>
+        <h2>Examination Schedule Changes</h2>
+        <p>Examination schedules may be updated by authorized examination administrators when necessary.</p>
+        <p>Students should review official announcements to remain informed about changes to examination dates and timings.</p>
+        <ul>
+            <li>Review the latest examination timetable.</li>
+            <li>Check official institutional announcements.</li>
+            <li>Verify updated booking details.</li>
+            <li>Contact the examination office if information is inconsistent.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-privacy-information">
+    <section>
+        <h2>Booking Information Privacy</h2>
+        <p>Student booking records may contain personal and academic information.</p>
+        <p>Students should protect their account credentials and avoid sharing private account information with unauthorized individuals.</p>
+        <p>Booking information should only be accessed and used for legitimate academic and examination-related purposes.</p>
+        <p>Authorized administrators should handle student records according to institutional privacy and security policies.</p>
+    </section>
+</template>
+
+<template id="booking-common-problems">
+    <section>
+        <h2>Common Booking Problems</h2>
+        <p>Students may occasionally encounter difficulties while reviewing their examination booking records.</p>
+        <ul>
+            <li>Examination details are missing.</li>
+            <li>Course information is incorrect.</li>
+            <li>Examination date is not displayed correctly.</li>
+            <li>Allocated timing appears incorrect.</li>
+            <li>Booking status is unclear.</li>
+            <li>A booking record cannot be located.</li>
+        </ul>
+        <p>Students should report these issues to the examination administrator with the relevant examination details.</p>
+    </section>
+</template>
+
+<template id="booking-support-information">
+    <section>
+        <h2>Student Booking Support</h2>
+        <p>Students who experience booking-related difficulties should contact the appropriate institutional support department.</p>
+        <p>When requesting assistance, students should provide sufficient information to help the administrator identify the relevant booking record.</p>
+        <p>Useful information may include the examination name, course, scheduled date, and a description of the issue.</p>
+        <p>Students should avoid sharing passwords or other confidential authentication information when requesting support.</p>
+    </section>
+</template>
+
+<template id="booking-administration-guidelines">
+    <section>
+        <h2>Booking Administration Guidelines</h2>
+        <p>Examination administrators are responsible for maintaining accurate examination schedules and associated booking records.</p>
+        <p>Administrative activities should follow the institution's approved examination management procedures.</p>
+        <ul>
+            <li>Review examination booking records.</li>
+            <li>Verify examination and course information.</li>
+            <li>Maintain accurate scheduling information.</li>
+            <li>Review booking status updates.</li>
+            <li>Resolve reported booking discrepancies.</li>
+            <li>Protect confidential student information.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="booking-policy-information">
+    <section>
+        <h2>Examination Booking Policies</h2>
+        <p>All examination bookings are subject to the rules and regulations established by the institution.</p>
+        <p>Students should follow the official booking deadlines, examination schedules, attendance requirements, and cancellation procedures.</p>
+        <p>Any special booking request should be submitted through the appropriate institutional authority.</p>
+        <p>The examination department is responsible for communicating applicable policy updates.</p>
+    </section>
+</template>
+
+<template id="booking-student-responsibilities">
+    <section>
+        <h2>Student Responsibilities</h2>
+        <ul>
+            <li>Maintain accurate personal and academic information.</li>
+            <li>Review examination bookings regularly.</li>
+            <li>Follow the published examination schedule.</li>
+            <li>Report incorrect booking details.</li>
+            <li>Follow institutional examination policies.</li>
+            <li>Protect student portal login credentials.</li>
+            <li>Contact authorized staff when assistance is required.</li>
+        </ul>
+    </section>
+</template>
+
+{% endblock %}

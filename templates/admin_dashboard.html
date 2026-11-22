@@ -1,0 +1,521 @@
+{% extends "admin_base.html" %}
+
+{% block main %}
+<div class="row g-3">
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Courses</p>
+                <h2>{{ courses }}</h2>
+                <a href="/admin/manage/courses">Manage Courses →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Examinations</p>
+                <h2>{{ exams }}</h2>
+                <a href="/admin/manage/exams">Manage examinations →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Examiners</p>
+                <h2>{{ examiners }}</h2>
+                <a href="/admin/manage/examiners">Manage examiners →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Students</p>
+                <h2>{{ students }}</h2>
+                <a href="/admin/manage/students">Manage students →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Examination Slots</p>
+                <h2>{{ slots }}</h2>
+                <a href="{{url_for('manage_slots')}}">Manage Examination Slots →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="card-text">Total Booking</p>
+                <h2>{{ bookings }}</h2>
+                <a href="#">Manage bookinngs →</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card shadow mt-4">
+    <div class="card-header fw-bold">
+        Examination Management Statistics
+    </div>
+
+    <div class="card-body">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Active Courses</p>
+                    <h3>{{ active_courses }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Upcoming Examinations</p>
+                    <h3>{{ upcoming_exams }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Available Slots</p>
+                    <h3>{{ available_slots }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Completed Bookings</p>
+                    <h3>{{ completed_bookings }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Pending Evaluations</p>
+                    <h3>{{ pending_evaluations }}</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="border rounded p-3">
+                    <p class="text-secondary">Total Evaluations</p>
+                    <h3>{{ total_evaluations }}</h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<template id="dashboard-course-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Course Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Course Name</h6>
+                    <p data-field="course-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Code</h6>
+                    <p data-field="course-code"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Duration</h6>
+                    <p data-field="course-duration"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Status</h6>
+                    <span class="badge bg-success">Active</span>
+                </div>
+                <div class="col-12">
+                    <h6>Course Description</h6>
+                    <p data-field="course-description"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-examination-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Examination Name</h6>
+                    <p data-field="exam-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination ID</h6>
+                    <p data-field="exam-id"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course</h6>
+                    <p data-field="exam-course"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Assigned Examiner</h6>
+                    <p data-field="examiner-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Date</h6>
+                    <p data-field="exam-date"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Time</h6>
+                    <p data-field="exam-time"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Duration</h6>
+                    <p data-field="exam-duration"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Status</h6>
+                    <span class="badge bg-primary">Scheduled</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-student-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Student Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Student ID</h6>
+                    <p data-field="student-id"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Student Name</h6>
+                    <p data-field="student-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Email Address</h6>
+                    <p data-field="student-email"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contact Number</h6>
+                    <p data-field="student-contact"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Enrolled Course</h6>
+                    <p data-field="student-course"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Registration Date</h6>
+                    <p data-field="registration-date"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-examiner-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examiner Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Examiner ID</h6>
+                    <p data-field="examiner-id"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examiner Name</h6>
+                    <p data-field="examiner-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Email Address</h6>
+                    <p data-field="examiner-email"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Specialization</h6>
+                    <p data-field="specialization"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Experience</h6>
+                    <p data-field="experience"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Assigned Examinations</h6>
+                    <p data-field="assigned-examinations"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-booking-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Booking Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Booking Reference</h6>
+                    <p data-field="booking-reference"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Student Name</h6>
+                    <p data-field="booking-student"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Name</h6>
+                    <p data-field="booking-examination"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Booking Date</h6>
+                    <p data-field="booking-date"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Selected Slot</h6>
+                    <p data-field="booking-slot"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Booking Status</h6>
+                    <span class="badge bg-success">Confirmed</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-slot-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Slot Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Slot ID</h6>
+                    <p data-field="slot-id"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Slot Name</h6>
+                    <p data-field="slot-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Slot Date</h6>
+                    <p data-field="slot-date"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Available Capacity</h6>
+                    <p data-field="slot-capacity"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Starting Time</h6>
+                    <p data-field="start-time"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Ending Time</h6>
+                    <p data-field="end-time"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-statistics-summary">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Detailed Management Statistics
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Total Registered Courses</h6>
+                        <h3 data-field="registered-courses">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Total Registered Students</h6>
+                        <h3 data-field="registered-students">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Total Registered Examiners</h6>
+                        <h3 data-field="registered-examiners">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Scheduled Examinations</h6>
+                        <h3 data-field="scheduled-examinations">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Completed Examinations</h6>
+                        <h3 data-field="completed-examinations">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Pending Evaluations</h6>
+                        <h3 data-field="pending-evaluations">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-evaluation-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Evaluation Details
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Evaluation ID</th>
+                        <th>Student Name</th>
+                        <th>Examination</th>
+                        <th>Maximum Marks</th>
+                        <th>Obtained Marks</th>
+                        <th>Percentage</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-field="evaluation-id"></td>
+                        <td data-field="student-name"></td>
+                        <td data-field="examination-name"></td>
+                        <td data-field="maximum-marks"></td>
+                        <td data-field="obtained-marks"></td>
+                        <td data-field="percentage"></td>
+                        <td data-field="result"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-recent-activities">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Recent Administrative Activities
+        </div>
+        <div class="card-body">
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <h6 data-field="activity-title"></h6>
+                    <p data-field="activity-description"></p>
+                    <small data-field="activity-date"></small>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-report-details">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Management Report
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Report Name</th>
+                        <th>Generated Date</th>
+                        <th>Total Records</th>
+                        <th>Report Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-field="report-id"></td>
+                        <td data-field="report-name"></td>
+                        <td data-field="generated-date"></td>
+                        <td data-field="total-records"></td>
+                        <td data-field="report-status"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-empty-state">
+    <div class="text-center p-4">
+        <h5>No Records Available</h5>
+        <p class="text-muted">
+            No examination management records are currently available.
+        </p>
+    </div>
+</template>
+
+<template id="dashboard-pagination">
+    <nav aria-label="Dashboard records pagination">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</template>
+
+<template id="dashboard-system-information">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            System Information
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Application Name</dt>
+                <dd class="col-sm-8">Examination Management Portal</dd>
+                <dt class="col-sm-4">Application Version</dt>
+                <dd class="col-sm-8" data-field="application-version"></dd>
+                <dt class="col-sm-4">System Status</dt>
+                <dd class="col-sm-8">
+                    <span class="badge bg-success">Operational</span>
+                </dd>
+                <dt class="col-sm-4">Last Updated</dt>
+                <dd class="col-sm-8" data-field="last-updated"></dd>
+            </dl>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

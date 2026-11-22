@@ -1,0 +1,340 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Students{% endblock %}
+
+{% block main %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>  
+            <h2>Manage Studentss</h2>
+            <p>Review registration and manage Students ...</p>
+        </div>
+        <div class="badge text-bg-primary">Total Examiners : {{ students|length }}</div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Students List</h5>
+            <form action="{{ url_for("manage_students") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by Id, name, email, department, status">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_students") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Student</th>
+                        <th>Student Id</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Booking</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.user.username }}</td>
+                        <td>{{ student.user.email }}</td>
+                        <td>{{ student.department }}</td>
+                        <td>{{ student.bookings }}</td>
+                        <td>{{ student.mob }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<template id="student-management-overview">
+    <section id="student-administration-information">
+        <h2>Student Administration Management</h2>
+        <p>The student administration module provides information and management guidelines for registered students participating in the examination management system.</p>
+        <p>Administrators can use student records to review registration details, verify academic information, monitor examination bookings, and maintain accurate student information.</p>
+        <h3>Student Administration Objectives</h3>
+        <ul>
+            <li>Maintain accurate student registration records.</li>
+            <li>Organize student information according to academic departments.</li>
+            <li>Monitor examination booking activities.</li>
+            <li>Verify student identity and contact information.</li>
+            <li>Support examination scheduling and administration.</li>
+            <li>Maintain reliable academic administration records.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-registration-guidelines">
+    <section id="student-registration-information">
+        <h2>Student Registration Guidelines</h2>
+        <p>Student registration establishes an individual record within the examination management system. Accurate registration information helps administrators maintain reliable student records.</p>
+        <h3>Registration Information</h3>
+        <ul>
+            <li>Student identification number.</li>
+            <li>Student username and registered email address.</li>
+            <li>Academic department information.</li>
+            <li>Registered mobile number.</li>
+            <li>Relevant academic registration details.</li>
+        </ul>
+        <h3>Registration Verification</h3>
+        <ul>
+            <li>Verify that the student identification number is correctly recorded.</li>
+            <li>Check the registered username and email address.</li>
+            <li>Confirm the department information.</li>
+            <li>Review the contact number for accuracy.</li>
+            <li>Identify incomplete or inconsistent registration information.</li>
+            <li>Follow institutional procedures when correcting student records.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-profile-management">
+    <section id="student-profile-information">
+        <h2>Student Profile Management</h2>
+        <p>A student profile contains the information required for identifying and managing a registered student within the examination system.</p>
+        <h3>Profile Information Categories</h3>
+        <ul>
+            <li>Personal identification information.</li>
+            <li>Registered account information.</li>
+            <li>Academic department details.</li>
+            <li>Contact information.</li>
+            <li>Examination participation information.</li>
+            <li>Student booking history.</li>
+        </ul>
+        <h3>Profile Maintenance Guidelines</h3>
+        <ul>
+            <li>Maintain accurate student information.</li>
+            <li>Verify changes before updating records.</li>
+            <li>Prevent duplicate student records.</li>
+            <li>Protect confidential student information.</li>
+            <li>Restrict administrative access to authorized personnel.</li>
+            <li>Maintain consistency across student records.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-department-management">
+    <section id="student-department-information">
+        <h2>Student Department Management</h2>
+        <p>Department information helps administrators organize registered students according to their academic programs and institutional departments.</p>
+        <h3>Department Administration</h3>
+        <ul>
+            <li>Maintain accurate department names.</li>
+            <li>Verify student department assignments.</li>
+            <li>Organize student records department-wise.</li>
+            <li>Review department information during registration verification.</li>
+            <li>Identify records with missing department information.</li>
+        </ul>
+        <h3>Department-Based Examination Coordination</h3>
+        <p>Department information can support examination planning, student coordination, academic reporting, and examination administration.</p>
+    </section>
+</template>
+
+<template id="student-examination-booking">
+    <section id="student-booking-information">
+        <h2>Student Examination Booking Management</h2>
+        <p>Examination booking information helps administrators understand student participation in scheduled examination sessions.</p>
+        <h3>Booking Management Activities</h3>
+        <ul>
+            <li>Review student examination booking records.</li>
+            <li>Verify examination session information.</li>
+            <li>Monitor student booking activity.</li>
+            <li>Check examination slot availability.</li>
+            <li>Identify duplicate or inconsistent booking records.</li>
+            <li>Maintain accurate examination participation information.</li>
+        </ul>
+        <h3>Booking Verification</h3>
+        <p>Administrators should verify that booking information corresponds to the correct student and examination session before relying on it for examination planning.</p>
+    </section>
+</template>
+
+<template id="student-examination-eligibility">
+    <section id="student-eligibility-information">
+        <h2>Student Examination Eligibility</h2>
+        <p>Examination eligibility refers to the academic and administrative requirements that a student must satisfy before participating in an examination.</p>
+        <h3>Eligibility Verification Guidelines</h3>
+        <ul>
+            <li>Verify student registration information.</li>
+            <li>Check the relevant course and examination details.</li>
+            <li>Review applicable academic requirements.</li>
+            <li>Confirm that examination registration follows institutional rules.</li>
+            <li>Identify incomplete administrative requirements.</li>
+            <li>Refer eligibility-related issues to the authorized academic department.</li>
+        </ul>
+        <p>Eligibility decisions should follow the official examination rules established by the institution.</p>
+    </section>
+</template>
+
+<template id="student-attendance-management">
+    <section id="student-attendance-information">
+        <h2>Student Examination Attendance</h2>
+        <p>Attendance information is an important part of examination administration. It helps authorized personnel maintain records of student participation in scheduled examinations.</p>
+        <h3>Attendance Administration</h3>
+        <ul>
+            <li>Verify student identity before recording attendance.</li>
+            <li>Check the assigned examination session.</li>
+            <li>Maintain accurate attendance information.</li>
+            <li>Record examination participation according to institutional procedures.</li>
+            <li>Identify attendance discrepancies for review.</li>
+            <li>Maintain appropriate attendance documentation.</li>
+        </ul>
+        <h3>Attendance Record Review</h3>
+        <p>Attendance records should be reviewed for accuracy and maintained according to the institution's examination documentation policy.</p>
+    </section>
+</template>
+
+<template id="student-examination-performance">
+    <section id="student-performance-information">
+        <h2>Student Examination Performance</h2>
+        <p>Student examination performance information supports academic evaluation and helps authorized academic personnel review assessment outcomes.</p>
+        <h3>Performance Record Categories</h3>
+        <ul>
+            <li>Examination participation records.</li>
+            <li>Assessment and evaluation details.</li>
+            <li>Marks awarded according to approved rubrics.</li>
+            <li>Course-wise examination outcomes.</li>
+            <li>Academic evaluation history.</li>
+        </ul>
+        <h3>Performance Record Guidelines</h3>
+        <ul>
+            <li>Maintain accurate assessment information.</li>
+            <li>Use approved examination rubrics.</li>
+            <li>Protect confidential student results.</li>
+            <li>Restrict access to authorized academic personnel.</li>
+            <li>Follow institutional result publication procedures.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-examination-communication">
+    <section id="student-communication-information">
+        <h2>Student Examination Communication</h2>
+        <p>Communication helps students remain informed about examination schedules, booking information, registration requirements, and important academic instructions.</p>
+        <h3>Important Communication Categories</h3>
+        <ul>
+            <li>Examination registration announcements.</li>
+            <li>Examination slot scheduling information.</li>
+            <li>Booking confirmation information.</li>
+            <li>Examination date and time notifications.</li>
+            <li>Changes to approved examination schedules.</li>
+            <li>Important academic examination instructions.</li>
+        </ul>
+        <p>Official examination communication should use verified institutional communication channels.</p>
+    </section>
+</template>
+
+<template id="student-record-security">
+    <section id="student-security-information">
+        <h2>Student Record Security and Privacy</h2>
+        <p>Student records contain personal and academic information that must be handled responsibly. Administrative access should follow institutional security and privacy requirements.</p>
+        <h3>Security Guidelines</h3>
+        <ul>
+            <li>Allow access only to authorized administrative users.</li>
+            <li>Protect student account information.</li>
+            <li>Avoid unnecessary disclosure of personal information.</li>
+            <li>Maintain appropriate access controls.</li>
+            <li>Review administrative activities according to institutional policy.</li>
+            <li>Preserve student records securely.</li>
+        </ul>
+        <h3>Data Protection</h3>
+        <p>Student information should be collected, processed, stored, and retained according to applicable institutional policies and data protection requirements.</p>
+    </section>
+</template>
+
+<template id="student-record-quality">
+    <section id="student-data-quality">
+        <h2>Student Data Quality Management</h2>
+        <p>Accurate student information is essential for reliable examination scheduling, booking management, communication, and academic administration.</p>
+        <h3>Data Quality Checks</h3>
+        <ul>
+            <li>Identify missing student information.</li>
+            <li>Check for duplicate registration records.</li>
+            <li>Verify email address consistency.</li>
+            <li>Review department information.</li>
+            <li>Check the accuracy of contact numbers.</li>
+            <li>Identify inconsistent booking information.</li>
+            <li>Maintain reliable student identification records.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-administration-reports">
+    <section id="student-report-information">
+        <h2>Student Administration Reports</h2>
+        <p>Student administration reports support institutional monitoring and help administrators review student registration and examination activities.</p>
+        <h3>Available Report Categories</h3>
+        <ul>
+            <li>Total registered student records.</li>
+            <li>Department-wise student information.</li>
+            <li>Student registration verification records.</li>
+            <li>Examination booking summaries.</li>
+            <li>Student examination participation records.</li>
+            <li>Incomplete student information reports.</li>
+            <li>Student record correction history.</li>
+        </ul>
+        <h3>Report Review Guidelines</h3>
+        <p>Administrative reports should be based on accurate records and accessed only by authorized personnel.</p>
+    </section>
+</template>
+
+<template id="student-administration-audit">
+    <section id="student-audit-information">
+        <h2>Student Record Audit and Review</h2>
+        <p>Regular student record reviews help maintain the accuracy, consistency, and reliability of information stored in the examination management system.</p>
+        <h3>Audit Review Activities</h3>
+        <ul>
+            <li>Review student registration details.</li>
+            <li>Verify academic department information.</li>
+            <li>Check student booking records.</li>
+            <li>Identify duplicate or incomplete records.</li>
+            <li>Review authorized changes to student information.</li>
+            <li>Maintain appropriate administrative documentation.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-administration-support">
+    <section id="student-support-information">
+        <h2>Student Administration Support</h2>
+        <p>Student administration support helps resolve issues related to registration information, examination bookings, account details, and academic records.</p>
+        <h3>Common Administrative Issues</h3>
+        <ul>
+            <li>Incorrect student identification information.</li>
+            <li>Missing or inaccurate contact information.</li>
+            <li>Incorrect department assignment.</li>
+            <li>Examination booking discrepancies.</li>
+            <li>Duplicate student records.</li>
+            <li>Incomplete registration information.</li>
+        </ul>
+        <h3>Issue Resolution Guidelines</h3>
+        <p>Administrative issues should be reviewed carefully, verified against authorized institutional records, and resolved according to established examination management procedures.</p>
+    </section>
+</template>
+
+<template id="student-administration-policy">
+    <section id="student-management-policy">
+        <h2>Student Management Policies</h2>
+        <p>Student administration activities should follow the institution's approved academic, examination, security, and record-management policies.</p>
+        <ul>
+            <li>Maintain accurate and complete student records.</li>
+            <li>Follow established registration procedures.</li>
+            <li>Use verified student information for examination administration.</li>
+            <li>Maintain confidentiality of academic records.</li>
+            <li>Follow approved examination booking procedures.</li>
+            <li>Preserve records according to institutional retention policies.</li>
+            <li>Refer exceptional cases to authorized academic administrators.</li>
+        </ul>
+    </section>
+</template>
+
+{% endblock %}

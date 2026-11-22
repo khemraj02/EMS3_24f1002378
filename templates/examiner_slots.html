@@ -1,0 +1,589 @@
+{% extends "examiner_base.html" %}
+
+{% block title %}Manage Examination Slots{% endblock %}
+
+{% block main %}
+<div>
+    <div class="justify-content-between align-items-center">
+            <h2>Manage Examination Slots</h2>
+            <p>Schedule examination sessions ...</p>
+    </div>
+
+{% if edit_slot %}
+    <div class="card shadow">
+        <div class="card-header fw-bold">Edit Examination Slots</div>
+        <div class="card-body">
+            <form action="{{ url_for("examiner_slots", edit_id=edit_slot.id) }}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examination</label>
+                        <select class="form-select" name="exam_id" required disabled>
+                            <option selected>
+                                {{edit_slot.exam.name}} - {{edit_slot.exam.course.code}}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examiner</label>
+                        <select class="form-select" required disabled>
+                            <option selected>{{current_user.username}} - {{current_user.examiner.department}}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label for="Input4" class="mb-2">Exam start at:</label>
+                        <input type="datetime-local" id="Input4" name="st" value="{{ edit_slot.st if edit_slot else '' }}" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label for="Input5" class="mb-2">Exam end at:</label>
+                        <input type="datetime-local" id="Input5" name="et" value="{{ edit_slot.et if edit_slot else '' }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input6" class="mb-2">Capacity</label>
+                        <input type="number" id="Input6" name="capacity" min="1" value="{{ edit_slot.capacity if edit_slot else 1 }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status" required>
+                            <option value="">Select Status</option>
+                            {% for status in ["Draft","Booking Open","Full","Completed"] %}
+                                <option value="{{status}}" {% if edit_slot and edit_slot.status == status %}selected{% endif %}>
+                                    {{status}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="submit" class="btn btn-primary" value="Save Changes">
+                    {% if edit_slot %}
+                        <a href="{{ url_for('examiner_slots') }}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Your Slots</h5>
+            <form action="{{ url_for("examiner_slots") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by course code, name or Id">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("examiner_slots") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Examination</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Booked</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for slot in slots %}
+                    <tr>
+                        <td>{{ slot.id }}</td>
+                        <td>{{ slot.exam.name }}</td>
+                        <td>{{ slot.st.strftime("%d %b %Y") }}</td>
+                        <td>{{ slot.st.strftime("%I:%M %p") }} - {{ slot.et.strftime("%I:%M %p") }}</td>
+                        <td>{{ slot.capacity-slot.avl_seat }}/{{ slot.capacity }}</td>
+                        <td>{{ slot.status }}</td>
+                        <td>
+                            <a href="{{ url_for("examiner_slots", edit_id=slot.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <a href="{{ url_for("delete_slot_by_examiner", slot_id=slot.id) }}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<template id="examination-slot-management">
+    <section>
+        <header>
+            <h2>Examination Slot Management</h2>
+            <p>Manage examination schedules, session details, and available seats.</p>
+        </header>
+
+        <div>
+            <h3>Slot Configuration</h3>
+            <div>
+                <label>Examination Reference</label>
+                <input type="text" name="slot_exam_reference">
+            </div>
+            <div>
+                <label>Slot Identification Number</label>
+                <input type="text" name="slot_identification">
+            </div>
+            <div>
+                <label>Session Category</label>
+                <select name="session_category">
+                    <option value="">Select Category</option>
+                    <option value="Morning">Morning Session</option>
+                    <option value="Afternoon">Afternoon Session</option>
+                    <option value="Evening">Evening Session</option>
+                    <option value="Special">Special Session</option>
+                </select>
+            </div>
+            <div>
+                <label>Examination Venue</label>
+                <input type="text" name="examination_venue">
+            </div>
+            <div>
+                <label>Room Identification</label>
+                <input type="text" name="room_identification">
+            </div>
+            <div>
+                <label>Maximum Seat Allocation</label>
+                <input type="number" name="maximum_seat_allocation" min="1">
+            </div>
+        </div>
+
+        <div>
+            <h3>Schedule Information</h3>
+            <div>
+                <label>Scheduled Examination Date</label>
+                <input type="date" name="scheduled_examination_date">
+            </div>
+            <div>
+                <label>Reporting Time</label>
+                <input type="time" name="reporting_time">
+            </div>
+            <div>
+                <label>Examination Starting Time</label>
+                <input type="time" name="examination_starting_time">
+            </div>
+            <div>
+                <label>Examination Ending Time</label>
+                <input type="time" name="examination_ending_time">
+            </div>
+            <div>
+                <label>Break Duration</label>
+                <input type="number" name="break_duration" min="0">
+            </div>
+            <div>
+                <label>Scheduling Remarks</label>
+                <textarea name="scheduling_remarks"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="slot-capacity-and-booking-management">
+    <section>
+        <header>
+            <h2>Slot Capacity and Booking Management</h2>
+            <p>Maintain seat availability and monitor examination registrations.</p>
+        </header>
+
+        <div>
+            <h3>Seat Allocation Details</h3>
+            <div>
+                <label>Total Available Capacity</label>
+                <input type="number" name="total_available_capacity">
+            </div>
+            <div>
+                <label>Reserved Seats</label>
+                <input type="number" name="reserved_seats">
+            </div>
+            <div>
+                <label>Confirmed Bookings</label>
+                <input type="number" name="confirmed_bookings">
+            </div>
+            <div>
+                <label>Remaining Available Seats</label>
+                <input type="number" name="remaining_available_seats">
+            </div>
+            <div>
+                <label>Waiting List Capacity</label>
+                <input type="number" name="waiting_list_capacity">
+            </div>
+        </div>
+
+        <div>
+            <h3>Booking Information</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking Reference</th>
+                        <th>Student Identification</th>
+                        <th>Student Name</th>
+                        <th>Course</th>
+                        <th>Booking Date</th>
+                        <th>Booking Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Booking Reference</td>
+                        <td>Student Identification</td>
+                        <td>Student Name</td>
+                        <td>Course Information</td>
+                        <td>Booking Date</td>
+                        <td>Booking Status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Booking Status Categories</h3>
+            <ul>
+                <li>Pending Booking</li>
+                <li>Confirmed Booking</li>
+                <li>Cancelled Booking</li>
+                <li>Waiting List</li>
+                <li>Completed Registration</li>
+                <li>Registration Rejected</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="slot-examiner-and-venue-allocation">
+    <section>
+        <header>
+            <h2>Examiner and Venue Allocation</h2>
+            <p>Maintain examination supervision and venue assignment information.</p>
+        </header>
+
+        <div>
+            <h3>Examiner Assignment</h3>
+            <div>
+                <label>Primary Examiner</label>
+                <input type="text" name="primary_examiner">
+            </div>
+            <div>
+                <label>Additional Examiner</label>
+                <input type="text" name="additional_examiner">
+            </div>
+            <div>
+                <label>Department</label>
+                <input type="text" name="examiner_department">
+            </div>
+            <div>
+                <label>Supervision Responsibility</label>
+                <textarea name="supervision_responsibility"></textarea>
+            </div>
+            <div>
+                <label>Assignment Status</label>
+                <select name="examiner_assignment_status">
+                    <option value="">Select Status</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Venue Information</h3>
+            <div>
+                <label>Building Name</label>
+                <input type="text" name="building_name">
+            </div>
+            <div>
+                <label>Room Number</label>
+                <input type="text" name="room_number">
+            </div>
+            <div>
+                <label>Room Capacity</label>
+                <input type="number" name="room_capacity">
+            </div>
+            <div>
+                <label>Seating Arrangement</label>
+                <select name="seating_arrangement">
+                    <option value="">Select Arrangement</option>
+                    <option value="Single">Single Seating</option>
+                    <option value="Double">Double Seating</option>
+                    <option value="Computer">Computer Based Seating</option>
+                    <option value="Laboratory">Laboratory Arrangement</option>
+                </select>
+            </div>
+            <div>
+                <label>Venue Instructions</label>
+                <textarea name="venue_instructions"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="slot-monitoring-and-attendance">
+    <section>
+        <header>
+            <h2>Slot Monitoring and Attendance</h2>
+            <p>Maintain examination session monitoring and attendance records.</p>
+        </header>
+
+        <div>
+            <h3>Examination Monitoring</h3>
+            <div>
+                <label>Session Monitoring Status</label>
+                <select name="session_monitoring_status">
+                    <option value="">Select Status</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Interrupted">Interrupted</option>
+                </select>
+            </div>
+            <div>
+                <label>Actual Start Time</label>
+                <input type="datetime-local" name="actual_start_time">
+            </div>
+            <div>
+                <label>Actual Completion Time</label>
+                <input type="datetime-local" name="actual_completion_time">
+            </div>
+            <div>
+                <label>Monitoring Remarks</label>
+                <textarea name="monitoring_remarks"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Attendance Summary</h3>
+            <div>
+                <label>Total Registered Students</label>
+                <input type="number" name="total_registered_students">
+            </div>
+            <div>
+                <label>Students Present</label>
+                <input type="number" name="students_present">
+            </div>
+            <div>
+                <label>Students Absent</label>
+                <input type="number" name="students_absent">
+            </div>
+            <div>
+                <label>Late Arrivals</label>
+                <input type="number" name="late_arrivals">
+            </div>
+            <div>
+                <label>Attendance Verification Status</label>
+                <select name="attendance_verification_status">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Incomplete">Incomplete</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Session Incident Records</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Incident Reference</th>
+                        <th>Incident Type</th>
+                        <th>Reported Time</th>
+                        <th>Description</th>
+                        <th>Resolution Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Incident Reference</td>
+                        <td>Incident Category</td>
+                        <td>Reported Time</td>
+                        <td>Incident Description</td>
+                        <td>Resolution Status</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="slot-rescheduling-and-cancellation">
+    <section>
+        <header>
+            <h2>Slot Rescheduling and Cancellation</h2>
+            <p>Maintain records of schedule changes and cancelled sessions.</p>
+        </header>
+
+        <div>
+            <h3>Rescheduling Details</h3>
+            <div>
+                <label>Previous Examination Date</label>
+                <input type="date" name="previous_examination_date">
+            </div>
+            <div>
+                <label>Revised Examination Date</label>
+                <input type="date" name="revised_examination_date">
+            </div>
+            <div>
+                <label>Previous Start Time</label>
+                <input type="time" name="previous_start_time">
+            </div>
+            <div>
+                <label>Revised Start Time</label>
+                <input type="time" name="revised_start_time">
+            </div>
+            <div>
+                <label>Reason for Rescheduling</label>
+                <textarea name="rescheduling_reason"></textarea>
+            </div>
+            <div>
+                <label>Rescheduling Approval</label>
+                <select name="rescheduling_approval">
+                    <option value="">Select Approval</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Cancellation Details</h3>
+            <div>
+                <label>Cancellation Date</label>
+                <input type="date" name="cancellation_date">
+            </div>
+            <div>
+                <label>Cancellation Reason</label>
+                <textarea name="cancellation_reason"></textarea>
+            </div>
+            <div>
+                <label>Booking Adjustment Status</label>
+                <select name="booking_adjustment_status">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Adjusted">Adjusted</option>
+                    <option value="Refunded">Refunded</option>
+                    <option value="Not Required">Not Required</option>
+                </select>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="slot-calendar-and-reporting">
+    <section>
+        <header>
+            <h2>Examination Slot Calendar and Reports</h2>
+            <p>Maintain scheduling records and examination slot performance information.</p>
+        </header>
+
+        <div>
+            <h3>Calendar Preferences</h3>
+            <div>
+                <label>Calendar Month</label>
+                <input type="month" name="calendar_month">
+            </div>
+            <div>
+                <label>Calendar View</label>
+                <select name="calendar_view">
+                    <option value="">Select View</option>
+                    <option value="Daily">Daily View</option>
+                    <option value="Weekly">Weekly View</option>
+                    <option value="Monthly">Monthly View</option>
+                    <option value="Academic">Academic Schedule View</option>
+                </select>
+            </div>
+            <div>
+                <label>Department Filter</label>
+                <input type="text" name="calendar_department">
+            </div>
+            <div>
+                <label>Examination Type</label>
+                <select name="calendar_examination_type">
+                    <option value="">All Examination Types</option>
+                    <option value="Practical">Practical</option>
+                    <option value="Theory">Theory</option>
+                    <option value="Oral">Oral</option>
+                    <option value="Internal">Internal</option>
+                    <option value="External">External</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Slot Performance Summary</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Performance Metric</th>
+                        <th>Recorded Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Examination Slots</td>
+                        <td>Slot Count</td>
+                        <td>Number of scheduled sessions</td>
+                    </tr>
+                    <tr>
+                        <td>Available Seats</td>
+                        <td>Seat Count</td>
+                        <td>Remaining booking capacity</td>
+                    </tr>
+                    <tr>
+                        <td>Confirmed Bookings</td>
+                        <td>Booking Count</td>
+                        <td>Number of confirmed registrations</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Sessions</td>
+                        <td>Session Count</td>
+                        <td>Successfully completed examinations</td>
+                    </tr>
+                    <tr>
+                        <td>Cancelled Sessions</td>
+                        <td>Cancellation Count</td>
+                        <td>Number of cancelled examination slots</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Administrative Notes</h3>
+            <div>
+                <label>Report Preparation Date</label>
+                <input type="date" name="report_preparation_date">
+            </div>
+            <div>
+                <label>Report Category</label>
+                <select name="report_category">
+                    <option value="">Select Report Category</option>
+                    <option value="Scheduling">Scheduling Report</option>
+                    <option value="Capacity">Capacity Report</option>
+                    <option value="Booking">Booking Report</option>
+                    <option value="Attendance">Attendance Report</option>
+                    <option value="Completion">Completion Report</option>
+                </select>
+            </div>
+            <div>
+                <label>Additional Administrative Notes</label>
+                <textarea name="administrative_notes"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

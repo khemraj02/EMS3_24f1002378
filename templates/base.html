@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Examination Management Portal">
+
+    <meta name="theme-color" content="#212529">
+
+    <title>
+        {% block title %}
+            Examination Portal
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+          href="/static/style.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold"
+               href="/">
+
+                Examination Portal
+
+            </a>
+
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavigation"
+                    aria-controls="mainNavigation"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse"
+                 id="mainNavigation">
+
+                <div class="ms-auto d-flex gap-2">
+
+                    {% block button %}{% endblock %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Accessibility Navigation -->
+    <a href="#main-content"
+       class="visually-hidden-focusable">
+
+        Skip to main content
+
+    </a>
+
+
+    <!-- Main Page Content -->
+    <main class="container my-4"
+          id="main-content">
+
+        {% block main %}{% endblock %}
+
+    </main>
+
+
+    <!-- Footer Section -->
+    <footer class="bg-dark text-white mt-5 py-4">
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <h5 class="fw-bold">
+                        Examination Portal
+                    </h5>
+
+                    <p class="text-light small mb-0">
+                        A centralized platform for examination
+                        scheduling and management.
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+                    <p class="small mb-1">
+                        Examination Management System
+                    </p>
+
+                    <p class="small text-secondary mb-0">
+                        &copy; {{ 2026 }} Examination Portal
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <template id="portal-user-profile">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            User Profile Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Full Name</h6>
+                    <p data-field="full-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Email Address</h6>
+                    <p data-field="email-address"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contact Number</h6>
+                    <p data-field="contact-number"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Account Type</h6>
+                    <p data-field="account-type"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Registration Date</h6>
+                    <p data-field="registration-date"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Account Status</h6>
+                    <span class="badge bg-success">Active</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-notification">
+    <div class="alert alert-info d-flex align-items-center" role="alert">
+        <div>
+            <h6 class="alert-heading mb-1" data-field="notification-title"></h6>
+            <p class="mb-0" data-field="notification-message"></p>
+            <small data-field="notification-date"></small>
+        </div>
+    </div>
+</template>
+
+<template id="portal-examination-overview">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Overview
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Total Examinations</h6>
+                        <h3 data-field="total-examinations">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Upcoming Examinations</h6>
+                        <h3 data-field="upcoming-examinations">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h6>Completed Examinations</h6>
+                        <h3 data-field="completed-examinations">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-examination-schedule">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Schedule
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Examination ID</th>
+                            <th>Examination Name</th>
+                            <th>Course</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-field="exam-id"></td>
+                            <td data-field="exam-name"></td>
+                            <td data-field="course-name"></td>
+                            <td data-field="exam-date"></td>
+                            <td data-field="exam-time"></td>
+                            <td data-field="exam-duration"></td>
+                            <td data-field="exam-status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-course-information">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Course Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Course Name</h6>
+                    <p data-field="course-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Code</h6>
+                    <p data-field="course-code"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Duration</h6>
+                    <p data-field="course-duration"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Course Category</h6>
+                    <p data-field="course-category"></p>
+                </div>
+                <div class="col-12">
+                    <h6>Course Description</h6>
+                    <p data-field="course-description"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-examination-booking">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Booking Details
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Booking Reference</h6>
+                    <p data-field="booking-reference"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Student Name</h6>
+                    <p data-field="student-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Name</h6>
+                    <p data-field="examination-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Selected Date</h6>
+                    <p data-field="selected-date"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Selected Time Slot</h6>
+                    <p data-field="selected-slot"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Booking Status</h6>
+                    <span class="badge bg-success">Confirmed</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-result-information">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Examination Result
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Student Name</h6>
+                    <p data-field="student-name"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Examination Name</h6>
+                    <p data-field="examination-name"></p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Maximum Marks</h6>
+                    <p data-field="maximum-marks"></p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Obtained Marks</h6>
+                    <p data-field="obtained-marks"></p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Percentage</h6>
+                    <p data-field="percentage"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Grade</h6>
+                    <p data-field="grade"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Final Result</h6>
+                    <p data-field="final-result"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-contact-information">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Contact Information
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6>Support Email</h6>
+                    <p data-field="support-email"></p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contact Number</h6>
+                    <p data-field="support-phone"></p>
+                </div>
+                <div class="col-12">
+                    <h6>Office Address</h6>
+                    <p data-field="office-address"></p>
+                </div>
+                <div class="col-12">
+                    <h6>Working Hours</h6>
+                    <p data-field="working-hours"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="portal-system-information">
+    <section class="card shadow-sm">
+        <div class="card-header fw-bold">
+            Portal System Information
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Application Name</dt>
+                <dd class="col-sm-8">Examination Management Portal</dd>
+                <dt class="col-sm-4">Application Version</dt>
+                <dd class="col-sm-8" data-field="application-version"></dd>
+                <dt class="col-sm-4">System Status</dt>
+                <dd class="col-sm-8">
+                    <span class="badge bg-success">Operational</span>
+                </dd>
+                <dt class="col-sm-4">Last Updated</dt>
+                <dd class="col-sm-8" data-field="last-updated"></dd>
+            </dl>
+        </div>
+    </section>
+</template>
+
+<template id="portal-empty-records">
+    <div class="text-center py-5">
+        <h5>No Records Available</h5>
+        <p class="text-muted">
+            There are currently no records available in this section.
+        </p>
+    </div>
+</template>
+
+<template id="portal-error-message">
+    <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">Unable to Complete Request</h6>
+        <p class="mb-0" data-field="error-message"></p>
+    </div>
+</template>
+
+<template id="portal-success-message">
+    <div class="alert alert-success" role="alert">
+        <h6 class="alert-heading">Operation Successful</h6>
+        <p class="mb-0" data-field="success-message"></p>
+    </div>
+</template>
+
+<template id="portal-pagination">
+    <nav aria-label="Portal pagination">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</template>
+
+<template id="portal-data-table">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Reference ID</th>
+                    <th scope="col">Record Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Updated Date</th>
+                    <th scope="col">Current Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-field="reference-id"></td>
+                    <td data-field="record-name"></td>
+                    <td data-field="record-category"></td>
+                    <td data-field="created-date"></td>
+                    <td data-field="updated-date"></td>
+                    <td data-field="current-status"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

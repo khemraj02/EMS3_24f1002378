@@ -1,0 +1,400 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Examination Slots{% endblock %}
+
+{% block main %}
+<div>
+    <div class="justify-content-between align-items-center">
+        <h2>Manage Examination Slots</h2>
+        <p>Schedule examination sessions and assing examiner ...</p>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header fw-bold">{{ "Edit Examination Slots" if edit_slot else "Add Examination Slots" }}</div>
+        <div class="card-body">
+            <form action="{{ url_for("manage_slots", edit_id=edit_slot.id) if edit_slot else url_for("manage_slots")}}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examination</label>
+                        <select class="form-select" name="exam_id">
+                            <option value="">Select Examination</option>
+                            {% for exam in exams %}
+                                <option value="{{exam.id}}">{{exam.name}} - {{exam.course.code}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examiner</label>
+                        <select class="form-select" name="examiner_id" required>
+                            <option value="">Select Examiner</option>
+                            {% for examiner in examiners %}
+                                <option value="{{examiner.id}}">{{examiner.user.username}} - {{examiner.department}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input1" class="form-label">Exam start at:</label>
+                        <input type="datetime-local" class="form-control" id="Input1" name="st" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input2" class="form-label">Exam end at:</label>
+                        <input type="datetime-local" class="form-control" id="Input2" name="et" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input3" class="form-label">Capacity</label>
+                        <input type="number" class="form-control" id="Input3" name="capacity" min="1" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status" required>
+                            <option value="">Select Status</option>
+                            {% for status in ["Draft","Booking Open","Full","Completed"] %}
+                                <option value="{{status}}">{{status}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                    <input type="submit" class="btn btn-primary" value={{ "Save Changes" if edit_slot else "Create slot" }}>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Create Slots</h5>
+            <form action="{{ url_for("manage_slots") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by course code, name or Id">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_slots") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Examination</th>
+                        <th>Examiner</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Booked</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for slot in slots %}
+                    <tr>
+                        <td>{{ slot.id }}</td>
+                        <td>{{ slot.exam.name }}</td>
+                        <td>{{ slot.examiner.user.username }}</td>
+                        <td>{{ slot.st.strftime("%d %b %Y") }}</td>
+                        <td>{{ slot.st.strftime("%I:%M %p") }} - {{ slot.et.strftime("%I:%M %p") }}</td>
+                        <td>{{ slot.capacity-slot.avl_seat}}/{{ slot.capacity }}</td>
+                        <td>{{ slot.status }}</td>
+                        <td>
+                            <a href="{{ url_for("manage_courses", edit_id=slot.id)}}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <a href="{{ url_for("delete_slot", slot_id=slot.id)}}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<template>
+    <section id="slot-management-information">
+        <h3>Examination Slot Management</h3>
+        <p>Examination slot management allows administrators to schedule examination sessions and assign examiners to specific examinations.</p>
+        <p>Each slot contains examination details, examiner information, start and end dates, available capacity, and booking status.</p>
+        <ul>
+            <li>Create examination slots for scheduled examinations.</li>
+            <li>Assign eligible examiners to examination sessions.</li>
+            <li>Set the starting and ending time of each session.</li>
+            <li>Define the maximum number of available seats.</li>
+            <li>Monitor slot availability and booking status.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-scheduling-guidelines">
+        <h3>Slot Scheduling Guidelines</h3>
+        <p>Administrators should follow proper scheduling procedures when creating examination slots.</p>
+        <ul>
+            <li>Select the correct examination before creating a slot.</li>
+            <li>Verify the assigned examiner details.</li>
+            <li>Choose an appropriate examination date.</li>
+            <li>Set valid starting and ending times.</li>
+            <li>Ensure the ending time is later than the starting time.</li>
+            <li>Set the capacity according to examination requirements.</li>
+            <li>Avoid overlapping examination sessions for the same examiner.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-examiner-allocation">
+        <h3>Examiner Allocation</h3>
+        <p>Examiner allocation ensures that every examination session has an assigned examiner responsible for conducting or supervising the examination.</p>
+        <ul>
+            <li>Assign examiners according to their department and expertise.</li>
+            <li>Verify examiner availability before allocation.</li>
+            <li>Avoid assigning multiple overlapping sessions to the same examiner.</li>
+            <li>Distribute examination responsibilities fairly.</li>
+            <li>Review examiner assignments before confirming a slot.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-capacity-management">
+        <h3>Slot Capacity Management</h3>
+        <p>Slot capacity represents the maximum number of students who can book a particular examination session.</p>
+        <ul>
+            <li>Set capacity according to available examination resources.</li>
+            <li>Monitor the number of booked seats.</li>
+            <li>Check remaining availability before opening additional slots.</li>
+            <li>Prevent bookings from exceeding the defined capacity.</li>
+            <li>Review capacity when examination requirements change.</li>
+        </ul>
+        <p>Booked seats and total capacity should be monitored regularly to maintain proper examination arrangements.</p>
+    </section>
+</template>
+
+<template>
+    <section id="slot-status-information">
+        <h3>Examination Slot Status</h3>
+        <p>Slot status helps administrators understand the current condition of each examination session.</p>
+        <ul>
+            <li>Draft: The examination slot is being prepared.</li>
+            <li>Booking Open: Students can book available seats.</li>
+            <li>Full: All available seats have been booked.</li>
+            <li>Completed: The examination session has been completed.</li>
+        </ul>
+        <p>Administrators should review slot status regularly and update it according to the examination schedule and institutional rules.</p>
+    </section>
+</template>
+
+<template>
+    <section id="slot-booking-management">
+        <h3>Student Slot Booking Management</h3>
+        <p>Slot booking management helps administrators monitor student registrations for scheduled examination sessions.</p>
+        <ul>
+            <li>Monitor the number of students booking each slot.</li>
+            <li>Check remaining available seats.</li>
+            <li>Ensure students select appropriate examination sessions.</li>
+            <li>Review booking information for accuracy.</li>
+            <li>Maintain booking records for examination administration.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-time-management">
+        <h3>Examination Time Management</h3>
+        <p>Proper time management helps prevent scheduling conflicts and ensures that examination sessions run according to the planned timetable.</p>
+        <ul>
+            <li>Verify the examination date before creating a slot.</li>
+            <li>Maintain accurate starting and ending times.</li>
+            <li>Allow appropriate time between examination sessions.</li>
+            <li>Check examiner availability during the selected time.</li>
+            <li>Communicate approved schedule changes through the appropriate institutional channels.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-review-and-monitoring">
+        <h3>Slot Review and Monitoring</h3>
+        <p>Administrators should regularly review examination slots to ensure that all scheduled sessions contain accurate information.</p>
+        <ul>
+            <li>Verify examination and examiner assignments.</li>
+            <li>Review examination dates and timings.</li>
+            <li>Monitor booked seats and remaining capacity.</li>
+            <li>Identify scheduling conflicts.</li>
+            <li>Review completed and upcoming examination sessions.</li>
+            <li>Correct inaccurate information according to institutional policy.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-reports">
+        <h3>Examination Slot Reports</h3>
+        <p>Slot reports help administrators understand examination scheduling and booking activities.</p>
+        <ul>
+            <li>Examination-wise slot information.</li>
+            <li>Examiner-wise session allocation.</li>
+            <li>Date-wise examination schedules.</li>
+            <li>Total slot capacity and booked seats.</li>
+            <li>Available and fully booked sessions.</li>
+            <li>Completed examination session records.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-administration-support">
+        <h3>Slot Administration Support</h3>
+        <p>Before creating or editing a slot, verify the examination, assigned examiner, examination timings, capacity, and status.</p>
+        <p>If scheduling conflicts or incorrect details are identified, review the slot information and make the necessary corrections according to institutional examination policies.</p>
+    </section>
+</template>
+
+<template>
+    <section id="slot-management-information">
+        <h3>Examination Slot Management</h3>
+        <p>Examination slot management allows administrators to schedule examination sessions and assign examiners to specific examinations.</p>
+        <p>Each slot contains examination details, examiner information, start and end dates, available capacity, and booking status.</p>
+        <ul>
+            <li>Create examination slots for scheduled examinations.</li>
+            <li>Assign eligible examiners to examination sessions.</li>
+            <li>Set the starting and ending time of each session.</li>
+            <li>Define the maximum number of available seats.</li>
+            <li>Monitor slot availability and booking status.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-scheduling-guidelines">
+        <h3>Slot Scheduling Guidelines</h3>
+        <p>Administrators should follow proper scheduling procedures when creating examination slots.</p>
+        <ul>
+            <li>Select the correct examination before creating a slot.</li>
+            <li>Verify the assigned examiner details.</li>
+            <li>Choose an appropriate examination date.</li>
+            <li>Set valid starting and ending times.</li>
+            <li>Ensure the ending time is later than the starting time.</li>
+            <li>Set the capacity according to examination requirements.</li>
+            <li>Avoid overlapping examination sessions for the same examiner.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-examiner-allocation">
+        <h3>Examiner Allocation</h3>
+        <p>Examiner allocation ensures that every examination session has an assigned examiner responsible for conducting or supervising the examination.</p>
+        <ul>
+            <li>Assign examiners according to their department and expertise.</li>
+            <li>Verify examiner availability before allocation.</li>
+            <li>Avoid assigning multiple overlapping sessions to the same examiner.</li>
+            <li>Distribute examination responsibilities fairly.</li>
+            <li>Review examiner assignments before confirming a slot.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-capacity-management">
+        <h3>Slot Capacity Management</h3>
+        <p>Slot capacity represents the maximum number of students who can book a particular examination session.</p>
+        <ul>
+            <li>Set capacity according to available examination resources.</li>
+            <li>Monitor the number of booked seats.</li>
+            <li>Check remaining availability before opening additional slots.</li>
+            <li>Prevent bookings from exceeding the defined capacity.</li>
+            <li>Review capacity when examination requirements change.</li>
+        </ul>
+        <p>Booked seats and total capacity should be monitored regularly to maintain proper examination arrangements.</p>
+    </section>
+</template>
+
+<template>
+    <section id="slot-status-information">
+        <h3>Examination Slot Status</h3>
+        <p>Slot status helps administrators understand the current condition of each examination session.</p>
+        <ul>
+            <li>Draft: The examination slot is being prepared.</li>
+            <li>Booking Open: Students can book available seats.</li>
+            <li>Full: All available seats have been booked.</li>
+            <li>Completed: The examination session has been completed.</li>
+        </ul>
+        <p>Administrators should review slot status regularly and update it according to the examination schedule and institutional rules.</p>
+    </section>
+</template>
+
+<template>
+    <section id="slot-booking-management">
+        <h3>Student Slot Booking Management</h3>
+        <p>Slot booking management helps administrators monitor student registrations for scheduled examination sessions.</p>
+        <ul>
+            <li>Monitor the number of students booking each slot.</li>
+            <li>Check remaining available seats.</li>
+            <li>Ensure students select appropriate examination sessions.</li>
+            <li>Review booking information for accuracy.</li>
+            <li>Maintain booking records for examination administration.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-time-management">
+        <h3>Examination Time Management</h3>
+        <p>Proper time management helps prevent scheduling conflicts and ensures that examination sessions run according to the planned timetable.</p>
+        <ul>
+            <li>Verify the examination date before creating a slot.</li>
+            <li>Maintain accurate starting and ending times.</li>
+            <li>Allow appropriate time between examination sessions.</li>
+            <li>Check examiner availability during the selected time.</li>
+            <li>Communicate approved schedule changes through the appropriate institutional channels.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-review-and-monitoring">
+        <h3>Slot Review and Monitoring</h3>
+        <p>Administrators should regularly review examination slots to ensure that all scheduled sessions contain accurate information.</p>
+        <ul>
+            <li>Verify examination and examiner assignments.</li>
+            <li>Review examination dates and timings.</li>
+            <li>Monitor booked seats and remaining capacity.</li>
+            <li>Identify scheduling conflicts.</li>
+            <li>Review completed and upcoming examination sessions.</li>
+            <li>Correct inaccurate information according to institutional policy.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-reports">
+        <h3>Examination Slot Reports</h3>
+        <p>Slot reports help administrators understand examination scheduling and booking activities.</p>
+        <ul>
+            <li>Examination-wise slot information.</li>
+            <li>Examiner-wise session allocation.</li>
+            <li>Date-wise examination schedules.</li>
+            <li>Total slot capacity and booked seats.</li>
+            <li>Available and fully booked sessions.</li>
+            <li>Completed examination session records.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="slot-administration-support">
+        <h3>Slot Administration Support</h3>
+        <p>Before creating or editing a slot, verify the examination, assigned examiner, examination timings, capacity, and status.</p>
+        <p>If scheduling conflicts or incorrect details are identified, review the slot information and make the necessary corrections according to institutional examination policies.</p>
+    </section>
+</template>
+
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Examination Rubrics{% endblock %}
+
+{% block main %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h2>Manage Examination Rubrics</h2>
+            <p>Define marking criteria for examinations ...</p>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header fw-bold">{{ "Edit Rubric Criteria" if edit_rubric else "Add Rubric Criteria" }}</div>
+        <div class="card-body">
+            <form action="{{ url_for("manage_rubrics", edit_id=edit_rubric.id) if edit_rubric else url_for("manage_rubrics") }}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-5">
+                        <label class="mb-2">Examination</label>
+                        <select class="form-select" aria-label="Default select example" name="exam_id" required aria-readonly>
+                            <option value="">Select Examination</option>
+                            {% for exam in exams %}
+                                <option value="{{ exam.id }}" {% if edit_rubric and edit_rubric.exam_id == exam.id %}selected{% endif %}>
+                                    {{exam.name}} - {{exam.course.code}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label for="Input2" class="form-label">Criteria Name</label>
+                        <input type="text" class="form-control" id="Input2" name="criteria" value="{{ edit_rubric.criteria if edit_rubric else "" }}" placeholder="Enter criteria name" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input3" class="form-label">Maximun marks</label>
+                        <input type="number" class="form-control" id="Input3" name="max_marks" value="{{ edit_rubric.max_marks if edit_rubric else "" }}" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input4" class="form-label">Weightage (%)</label>
+                        <input type="number" class="form-control" id="Input4" name="weightage" value="{{ edit_rubric.weightage if edit_rubric else "" }}" required>
+                    </div>
+                    
+                    <div class="mb-3 col-10">
+                        <label for="Textarea1" class="form-label">Description</label>
+                        <textarea class="form-control" id="Textarea1" rows="3" name="description" placeholder="Enter rubric description...">{{ edit_rubric.description if edit_rubric else "" }}</textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="submit" class="btn btn-primary" value="{{ "Save changes" if edit_rubric else "Add Criteria" }}">
+                    {% if edit_rubric %}
+                        <a href="{{ url_for('manage_rubrics') }}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Rubric List</h5>
+            <form action="{{ url_for("manage_rubrics") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by rubric id, course code, exam name">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_rubrics") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Examination</th>
+                        <th>Course Code</th>
+                        <th>Criteria</th>
+                        <th>Max Marks</th>
+                        <th>Weightage</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for rubric in rubrics %}
+                    <tr>
+                        <td>{{ rubric.id }}</td>
+                        <td>{{ rubric.exam.name }}</td>
+                        <td>{{ rubric.exam.course.code }}</td>
+                        <td>{{ rubric.criteria }}</td>
+                        <td>{{ rubric.max_marks }}</td>
+                        <td>{{ rubric.weightage }} %</td>
+                        <td>
+                            <a href="{{ url_for("manage_rubrics", edit_id=rubric.id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <a href="{{ url_for("delete_rubric", rubric_id=rubric.id) }}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<template>
+    <section id="rubric-information">
+        <h3>Examination Rubric Information</h3>
+        <p>Examination rubrics define the marking criteria used to evaluate student performance in different examinations. Each rubric contains criteria names, maximum marks, weightage percentages, and descriptions.</p>
+        <p>Administrators can create, update, review, and maintain examination rubrics according to the academic requirements of each course.</p>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-criteria-guidelines">
+        <h3>Rubric Criteria Guidelines</h3>
+        <p>Rubric criteria should clearly describe the skills, knowledge, and performance expected from students during an examination.</p>
+        <ul>
+            <li>Use clear and meaningful criteria names.</li>
+            <li>Define maximum marks for every criterion.</li>
+            <li>Assign appropriate weightage percentages.</li>
+            <li>Provide detailed descriptions for evaluation.</li>
+            <li>Ensure that criteria are relevant to the selected examination.</li>
+            <li>Avoid duplicate or overlapping evaluation criteria.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-mark-distribution">
+        <h3>Marks Distribution</h3>
+        <p>Maximum marks represent the highest score that an examiner can award for a particular criterion. Weightage represents the percentage contribution of that criterion to the overall examination evaluation.</p>
+        <ul>
+            <li>Assign marks according to the difficulty and importance of the criterion.</li>
+            <li>Ensure that the total weightage follows the examination assessment policy.</li>
+            <li>Maintain consistency in marks distribution across similar examinations.</li>
+            <li>Review the distribution before publishing the rubric.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-evaluation-guidelines">
+        <h3>Evaluation Guidelines</h3>
+        <p>Examiners should use the approved rubric criteria while evaluating student answer sheets, practical work, assignments, and other examination activities.</p>
+        <ul>
+            <li>Read the description of each criterion carefully.</li>
+            <li>Evaluate students using the same assessment standards.</li>
+            <li>Award marks according to demonstrated performance.</li>
+            <li>Maintain transparency throughout the evaluation process.</li>
+            <li>Record marks accurately for every assessment criterion.</li>
+            <li>Follow the examination rules established by the institution.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-quality-review">
+        <h3>Rubric Quality Review</h3>
+        <p>Before using a rubric, administrators should verify that all criteria are understandable, measurable, and relevant to the examination.</p>
+        <ul>
+            <li>Check the examination and associated course.</li>
+            <li>Verify the criteria name and description.</li>
+            <li>Review maximum marks and weightage values.</li>
+            <li>Identify missing or duplicate criteria.</li>
+            <li>Confirm that the rubric supports fair evaluation.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-management-policy">
+        <h3>Rubric Management Policy</h3>
+        <p>Administrators are responsible for maintaining accurate and updated examination rubrics.</p>
+        <ul>
+            <li>Create rubrics according to approved examination requirements.</li>
+            <li>Update criteria when assessment requirements change.</li>
+            <li>Review existing rubrics before making modifications.</li>
+            <li>Remove outdated rubrics only when permitted by institutional policy.</li>
+            <li>Maintain consistency between examination rubrics and course objectives.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-performance-levels">
+        <h3>Student Performance Levels</h3>
+        <p>Assessment criteria can be used to describe different levels of student performance.</p>
+        <ul>
+            <li>Excellent: Demonstrates outstanding understanding and performance.</li>
+            <li>Very Good: Demonstrates strong understanding with minor errors.</li>
+            <li>Good: Demonstrates satisfactory understanding of the topic.</li>
+            <li>Average: Demonstrates basic understanding with some mistakes.</li>
+            <li>Needs Improvement: Requires additional learning and practice.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-moderation">
+        <h3>Assessment Moderation</h3>
+        <p>Moderation helps maintain fairness and consistency in examination assessment across different examiners and departments.</p>
+        <ul>
+            <li>Compare evaluation standards between examiners.</li>
+            <li>Review differences in awarded marks.</li>
+            <li>Ensure that rubric descriptions are interpreted consistently.</li>
+            <li>Resolve assessment inconsistencies according to institutional rules.</li>
+            <li>Maintain the approved marking standards.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-reports">
+        <h3>Rubric Reports and Documentation</h3>
+        <p>Rubric documentation helps administrators and academic departments maintain records of examination assessment criteria.</p>
+        <ul>
+            <li>Maintain examination-wise rubric information.</li>
+            <li>Review course-wise assessment criteria.</li>
+            <li>Monitor maximum marks and weightage distribution.</li>
+            <li>Maintain records of rubric modifications.</li>
+            <li>Prepare assessment documentation for academic review.</li>
+        </ul>
+    </section>
+</template>
+
+<template>
+    <section id="rubric-support">
+        <h3>Rubric Management Support</h3>
+        <p>Administrators should verify examination details before creating or editing rubric criteria.</p>
+        <p>If an incorrect examination, marks distribution, or weightage is identified, review the rubric information and make the necessary correction according to institutional policy.</p>
+    </section>
+</template>
+
+{% endblock %}

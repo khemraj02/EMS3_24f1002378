@@ -1,0 +1,872 @@
+{% extends "examiner_base.html" %}
+
+{% block title %}Examinations{% endblock %}
+
+{% block main %}
+<div>
+    <h2>Your Examinations</h2>
+    <p>View examinations assigned to you ...</p>
+</div>
+
+{% if exam %}
+    <div class="card shadow">
+        <div class="card-header fw-bold">Add Examination Slots</div>
+        <div class="card-body">
+            <form action="{{ url_for("examiner_exams", exam_id=exam.id) }}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examination</label>
+                        <select class="form-select" name="exam_id" required disabled>
+                            <option value="">Select Examination</option>
+                            {% for e in exams %}
+                                <option value="{{e.id}}" {% if e.id == exam.id %}selected{% endif %}>
+                                    {{e.name}} - {{e.course.code}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Examiner</label>
+                        <select class="form-select" required disabled>
+                            <option selected>{{current_user.username}} - {{current_user.examiner.department}}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label for="Input4" class="mb-2">Exam start at:</label>
+                        <input type="datetime-local" id="Input4" name="st" value="{{ edit_slot.st if edit_slot else '' }}" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3 col-5">
+                        <label for="Input5" class="mb-2">Exam end at:</label>
+                        <input type="datetime-local" id="Input5" name="et" value="{{ edit_slot.et if edit_slot else '' }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input6" class="mb-2">Capacity</label>
+                        <input type="number" id="Input6" name="capacity" min="1" value="{{ edit_slot.capacity if edit_slot else 1 }}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status" required>
+                            <option value="">Select Status</option>
+                            {% for status in ["Draft","Booking Open","Full","Completed"] %}
+                                <option value="{{status}}" {% if edit_slot and edit_slot.status == status %}selected{% endif %}>
+                                    {{status}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="submit" class="btn btn-primary" value="{{ "Save Changes" if edit_slot else "Create Slot" }}">
+                    {% if edit_slot %}
+                        <a href="{{ url_for('manage_slots') }}" class="btn btn-outline-secondary">Cancel</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}
+
+<div class="card shadow my-3">
+    <div class="card-body p-4">
+        <h5 class="mb-3 fw-bold">Examinations</h5>
+        <form action="{{ url_for("examiner_exams") }}" method="GET" class="row g-2 mb-3">
+            <div class="col-8">
+                <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by name, course_code, type or Id">
+            </div>
+            <div class="col-auto">
+                <input type="submit" value="Search" class="btn btn-success">
+                <a href="{{ url_for("examiner_exams") }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+
+        <table class="table table-center text-center">
+            <thead>
+                <tr>
+                    <th>Exam Id</th>
+                    <th>Course Code</th>
+                    <th>Examination</th>
+                    <th>Exam Type</th>
+                    <th>Duration</th>
+                    <th>Max Marks</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.id }}</td>
+                    <td>{{ exam.course.code }}</td>
+                    <td>{{ exam.name }}</td>
+                    <td>{{ exam.type }}</td>
+                    <td>{{ exam.duration }}</td>
+                    <td>{{ exam.max_marks }}</td>
+                    <td>{{ exam.status }}</td>
+                    <td>
+                        <a href="{{ url_for("examiner_exams", exam_id=exam.id) }}" class="btn btn-outline-primary btn-sm">Create Slot</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<template id="examination-administration-management">
+
+    <section id="examination-master-records">
+        <h2>Examination Master Records</h2>
+
+        <dl>
+            <dt>Examination Reference Number</dt>
+            <dd></dd>
+
+            <dt>Examination Name</dt>
+            <dd></dd>
+
+            <dt>Examination Category</dt>
+            <dd></dd>
+
+            <dt>Academic Session</dt>
+            <dd></dd>
+
+            <dt>Academic Year</dt>
+            <dd></dd>
+
+            <dt>Course Reference</dt>
+            <dd></dd>
+
+            <dt>Subject Code</dt>
+            <dd></dd>
+
+            <dt>Examination Duration</dt>
+            <dd></dd>
+
+            <dt>Maximum Obtainable Marks</dt>
+            <dd></dd>
+
+            <dt>Minimum Passing Marks</dt>
+            <dd></dd>
+
+            <dt>Examination Description</dt>
+            <dd></dd>
+
+            <dt>Examination Creation Date</dt>
+            <dd></dd>
+
+            <dt>Examination Approval Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-category-management">
+        <h2>Examination Category Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Category Identifier</th>
+                    <th>Examination Category</th>
+                    <th>Assessment Description</th>
+                    <th>Maximum Marks</th>
+                    <th>Duration</th>
+                    <th>Category Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>Internal Examination</td>
+                    <td>Institutional academic assessment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>External Examination</td>
+                    <td>University-level academic assessment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Practical Examination</td>
+                    <td>Practical knowledge assessment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Oral Examination</td>
+                    <td>Oral and communication assessment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Online Examination</td>
+                    <td>Digital examination assessment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-slot-management">
+        <h2>Examination Slot Management Records</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Slot Identifier</th>
+                    <th>Examination Reference</th>
+                    <th>Assigned Examiner</th>
+                    <th>Starting Date and Time</th>
+                    <th>Ending Date and Time</th>
+                    <th>Slot Capacity</th>
+                    <th>Slot Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="slot-capacity-management">
+        <h2>Slot Capacity Management</h2>
+
+        <dl>
+            <dt>Capacity Reference Number</dt>
+            <dd></dd>
+
+            <dt>Examination Slot Identifier</dt>
+            <dd></dd>
+
+            <dt>Maximum Candidate Capacity</dt>
+            <dd></dd>
+
+            <dt>Registered Candidate Count</dt>
+            <dd></dd>
+
+            <dt>Available Candidate Capacity</dt>
+            <dd></dd>
+
+            <dt>Reserved Candidate Capacity</dt>
+            <dd></dd>
+
+            <dt>Capacity Utilization Percentage</dt>
+            <dd></dd>
+
+            <dt>Capacity Verification Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="slot-booking-management">
+        <h2>Examination Slot Booking Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking Reference</th>
+                    <th>Candidate Registration Number</th>
+                    <th>Examination Identifier</th>
+                    <th>Slot Identifier</th>
+                    <th>Booking Date</th>
+                    <th>Booking Confirmation</th>
+                    <th>Booking Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examiner-assignment-management">
+        <h2>Examiner Assignment Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Assignment Reference</th>
+                    <th>Examiner Identifier</th>
+                    <th>Examiner Name</th>
+                    <th>Department</th>
+                    <th>Assigned Examination</th>
+                    <th>Assigned Slot</th>
+                    <th>Assignment Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examiner-workload-management">
+        <h2>Examiner Workload Management</h2>
+
+        <dl>
+            <dt>Examiner Reference Number</dt>
+            <dd></dd>
+
+            <dt>Total Assigned Examinations</dt>
+            <dd></dd>
+
+            <dt>Total Assigned Examination Slots</dt>
+            <dd></dd>
+
+            <dt>Total Assigned Candidates</dt>
+            <dd></dd>
+
+            <dt>Pending Evaluation Workload</dt>
+            <dd></dd>
+
+            <dt>Completed Evaluation Workload</dt>
+            <dd></dd>
+
+            <dt>Examiner Availability</dt>
+            <dd></dd>
+
+            <dt>Workload Distribution Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-venue-management">
+        <h2>Examination Venue Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Venue Identifier</th>
+                    <th>Examination Center</th>
+                    <th>Building</th>
+                    <th>Room Number</th>
+                    <th>Maximum Seating Capacity</th>
+                    <th>Assigned Examination</th>
+                    <th>Venue Availability</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-calendar-management">
+        <h2>Examination Calendar Management</h2>
+
+        <dl>
+            <dt>Calendar Reference Number</dt>
+            <dd></dd>
+
+            <dt>Academic Session</dt>
+            <dd></dd>
+
+            <dt>Examination Registration Start Date</dt>
+            <dd></dd>
+
+            <dt>Examination Registration End Date</dt>
+            <dd></dd>
+
+            <dt>Examination Commencement Date</dt>
+            <dd></dd>
+
+            <dt>Examination Completion Date</dt>
+            <dd></dd>
+
+            <dt>Result Declaration Date</dt>
+            <dd></dd>
+
+            <dt>Academic Calendar Approval</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+</template>
+
+<template id="examination-monitoring-management">
+
+    <section id="examination-status-management">
+        <h2>Examination Status Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Status Identifier</th>
+                    <th>Examination Reference</th>
+                    <th>Current Status</th>
+                    <th>Status Description</th>
+                    <th>Last Updated Date</th>
+                    <th>Verification Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Draft</td>
+                    <td>Examination is under preparation</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Booking Open</td>
+                    <td>Candidate registration is available</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Full</td>
+                    <td>Available examination capacity is occupied</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Completed</td>
+                    <td>Examination activity has been completed</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-attendance-monitoring">
+        <h2>Examination Attendance Monitoring</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Attendance Reference</th>
+                    <th>Candidate Number</th>
+                    <th>Examination Reference</th>
+                    <th>Examination Slot</th>
+                    <th>Reporting Time</th>
+                    <th>Attendance Status</th>
+                    <th>Verification Officer</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-supervision-management">
+        <h2>Examination Supervision Management</h2>
+
+        <dl>
+            <dt>Supervisor Reference Number</dt>
+            <dd></dd>
+
+            <dt>Supervisor Name</dt>
+            <dd></dd>
+
+            <dt>Assigned Examination Center</dt>
+            <dd></dd>
+
+            <dt>Assigned Examination Hall</dt>
+            <dd></dd>
+
+            <dt>Supervision Start Time</dt>
+            <dd></dd>
+
+            <dt>Supervision End Time</dt>
+            <dd></dd>
+
+            <dt>Total Candidates Supervised</dt>
+            <dd></dd>
+
+            <dt>Supervision Completion Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-material-management">
+        <h2>Examination Material Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Material Reference</th>
+                    <th>Examination Identifier</th>
+                    <th>Material Category</th>
+                    <th>Material Description</th>
+                    <th>Required Quantity</th>
+                    <th>Available Quantity</th>
+                    <th>Distribution Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Question Papers</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Answer Sheets</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Attendance Sheets</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Examination Stationery</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-incident-management">
+        <h2>Examination Incident Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Incident Reference</th>
+                    <th>Examination Identifier</th>
+                    <th>Incident Category</th>
+                    <th>Incident Description</th>
+                    <th>Reported By</th>
+                    <th>Reported Date</th>
+                    <th>Resolution Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-rescheduling-management">
+        <h2>Examination Rescheduling Management</h2>
+
+        <dl>
+            <dt>Rescheduling Reference Number</dt>
+            <dd></dd>
+
+            <dt>Original Examination Date</dt>
+            <dd></dd>
+
+            <dt>Revised Examination Date</dt>
+            <dd></dd>
+
+            <dt>Original Slot Identifier</dt>
+            <dd></dd>
+
+            <dt>Revised Slot Identifier</dt>
+            <dd></dd>
+
+            <dt>Rescheduling Reason</dt>
+            <dd></dd>
+
+            <dt>Rescheduling Approval Authority</dt>
+            <dd></dd>
+
+            <dt>Rescheduling Approval Date</dt>
+            <dd></dd>
+
+            <dt>Rescheduling Confirmation Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+</template>
+
+<template id="examination-reporting-and-compliance">
+
+    <section id="examination-statistical-records">
+        <h2>Examination Statistical Records</h2>
+
+        <dl>
+            <dt>Total Scheduled Examinations</dt>
+            <dd></dd>
+
+            <dt>Total Available Examination Slots</dt>
+            <dd></dd>
+
+            <dt>Total Registered Candidates</dt>
+            <dd></dd>
+
+            <dt>Total Available Candidate Capacity</dt>
+            <dd></dd>
+
+            <dt>Total Assigned Examiners</dt>
+            <dd></dd>
+
+            <dt>Total Completed Examinations</dt>
+            <dd></dd>
+
+            <dt>Total Pending Examinations</dt>
+            <dd></dd>
+
+            <dt>Total Cancelled Examinations</dt>
+            <dd></dd>
+
+            <dt>Overall Examination Completion Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-performance-report">
+        <h2>Examination Performance Reporting</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Report Reference</th>
+                    <th>Examination Identifier</th>
+                    <th>Registered Candidates</th>
+                    <th>Attended Candidates</th>
+                    <th>Absent Candidates</th>
+                    <th>Successful Candidates</th>
+                    <th>Unsuccessful Candidates</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-compliance-management">
+        <h2>Examination Compliance Management</h2>
+
+        <ul>
+            <li>Verify examination information before scheduling.</li>
+            <li>Ensure examiner assignments are properly recorded.</li>
+            <li>Maintain accurate examination slot information.</li>
+            <li>Verify the available candidate capacity.</li>
+            <li>Prevent overlapping examination schedules.</li>
+            <li>Maintain examination confidentiality.</li>
+            <li>Follow institutional examination regulations.</li>
+            <li>Maintain candidate registration records.</li>
+            <li>Verify examination attendance information.</li>
+            <li>Maintain examination documentation.</li>
+            <li>Review examination completion records.</li>
+            <li>Preserve examination administration history.</li>
+        </ul>
+    </section>
+
+    <section id="examination-audit-management">
+        <h2>Examination Administration Audit</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Audit Reference</th>
+                    <th>Examination Identifier</th>
+                    <th>Examiner Identifier</th>
+                    <th>Activity Category</th>
+                    <th>Activity Description</th>
+                    <th>Previous Record</th>
+                    <th>Updated Record</th>
+                    <th>Activity Timestamp</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-approval-management">
+        <h2>Examination Approval Management</h2>
+
+        <dl>
+            <dt>Approval Reference Number</dt>
+            <dd></dd>
+
+            <dt>Examination Reference Number</dt>
+            <dd></dd>
+
+            <dt>Created By</dt>
+            <dd></dd>
+
+            <dt>Reviewed By</dt>
+            <dd></dd>
+
+            <dt>Approval Authority</dt>
+            <dd></dd>
+
+            <dt>Examination Verification Status</dt>
+            <dd></dd>
+
+            <dt>Approval Date</dt>
+            <dd></dd>
+
+            <dt>Approval Remarks</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-record-archival">
+        <h2>Examination Record Archival</h2>
+
+        <dl>
+            <dt>Archive Reference Number</dt>
+            <dd></dd>
+
+            <dt>Examination Identifier</dt>
+            <dd></dd>
+
+            <dt>Academic Session</dt>
+            <dd></dd>
+
+            <dt>Archived Examination Slots</dt>
+            <dd></dd>
+
+            <dt>Archived Candidate Records</dt>
+            <dd></dd>
+
+            <dt>Archived Examiner Assignments</dt>
+            <dd></dd>
+
+            <dt>Archived Examination Results</dt>
+            <dd></dd>
+
+            <dt>Archive Creation Date</dt>
+            <dd></dd>
+
+            <dt>Archive Verification Status</dt>
+            <dd></dd>
+
+            <dt>Record Retention Category</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+</template>
+
+{% endblock %}

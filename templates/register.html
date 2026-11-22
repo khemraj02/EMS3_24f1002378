@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Page{% endblock %}
+
+{% block main %}
+<div class="card" id="form">
+    <div class="card-header text-center bg-primary text-white"><h3>{{role}} Registration</h3></div>
+    
+    <div class="card-body">
+        <form action="/register/{{ role }}" method="POST">
+            <div class="mb-3">
+                <label for="Input1" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="Input1" name="username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Email1" class="form-label">Email Id</label>
+                <input type="email" class="form-control" id="Email1" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Input2" class="form-label">Contact Number</label>
+                <input type="text" class="form-control" id="Input2" maxlength="10" minlength="10" name="mob" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Input3" class="form-label">Department</label>
+                <input type="text" class="form-control" id="Input3" name="department" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Password1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password1" name="password" required>
+            </div>
+
+            <input type="submit" value="Register" class="btn btn-success w-100 mt-3">
+
+            <div class="text.center mt-3">
+                Already have an account? <a href="/login/0">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<template id="registration-module-overview">
+    <section id="registration-overview">
+        <h2>Examination Management System Registration</h2>
+        <p>The registration module provides a structured process for creating user accounts within the examination management system. It collects essential information required to identify users and organize their participation in academic examination activities.</p>
+        <h3>Registration Objectives</h3>
+        <ul>
+            <li>Create individual user accounts.</li>
+            <li>Collect accurate personal and academic information.</li>
+            <li>Associate users with their respective departments.</li>
+            <li>Maintain reliable account identification records.</li>
+            <li>Support secure access to examination management services.</li>
+            <li>Provide a consistent registration process for different user roles.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-personal-information">
+    <section id="personal-information-guidelines">
+        <h2>Personal Information Guidelines</h2>
+        <p>Personal information helps the institution identify registered users and maintain accurate account records.</p>
+        <h3>Full Name Requirements</h3>
+        <ul>
+            <li>Enter the user's complete name.</li>
+            <li>Use the correct spelling of the registered name.</li>
+            <li>Avoid unnecessary special characters.</li>
+            <li>Ensure the name corresponds to institutional records.</li>
+        </ul>
+        <h3>Contact Information Requirements</h3>
+        <ul>
+            <li>Provide a valid email address.</li>
+            <li>Enter an active contact number.</li>
+            <li>Check the accuracy of contact information before registration.</li>
+            <li>Use contact details that can be accessed by the account owner.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-email-guidelines">
+    <section id="email-registration-guidelines">
+        <h2>Email Address Verification</h2>
+        <p>An email address is an important account identifier and may be used for institutional communication, account notifications, and registration-related information.</p>
+        <h3>Email Address Guidelines</h3>
+        <ul>
+            <li>Enter a correctly formatted email address.</li>
+            <li>Use an active email account.</li>
+            <li>Check spelling before submitting registration details.</li>
+            <li>Use an institution-approved email address when required.</li>
+            <li>Avoid registering with another person's email address.</li>
+            <li>Keep account recovery information accessible.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-contact-guidelines">
+    <section id="contact-registration-guidelines">
+        <h2>Contact Number Guidelines</h2>
+        <p>Contact information supports communication between registered users and authorized institutional administrators.</p>
+        <h3>Contact Number Requirements</h3>
+        <ul>
+            <li>Provide a valid mobile number.</li>
+            <li>Enter the required number of digits.</li>
+            <li>Verify that the number is active.</li>
+            <li>Check the number before submitting the registration form.</li>
+            <li>Update contact information through authorized procedures when it changes.</li>
+        </ul>
+        <h3>Communication Purposes</h3>
+        <ul>
+            <li>Important examination announcements.</li>
+            <li>Registration-related communication.</li>
+            <li>Account assistance and support.</li>
+            <li>Institutional examination updates.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-department-information">
+    <section id="department-registration-guidelines">
+        <h2>Department Information</h2>
+        <p>Department information helps organize registered users according to their academic or institutional responsibilities.</p>
+        <h3>Department Information Guidelines</h3>
+        <ul>
+            <li>Enter the correct department name.</li>
+            <li>Use the official department designation.</li>
+            <li>Verify department details before registration.</li>
+            <li>Maintain consistency with institutional records.</li>
+            <li>Contact the appropriate department administrator if the correct department information is unavailable.</li>
+        </ul>
+        <h3>Department-Based Administration</h3>
+        <p>Department information can support examination coordination, academic communication, examiner allocation, and administrative reporting.</p>
+    </section>
+</template>
+
+<template id="registration-password-guidelines">
+    <section id="password-security-guidelines">
+        <h2>Password Security Guidelines</h2>
+        <p>A password protects a user's account and helps prevent unauthorized access to examination management services.</p>
+        <h3>Password Recommendations</h3>
+        <ul>
+            <li>Use a strong and unique password.</li>
+            <li>Combine uppercase and lowercase letters.</li>
+            <li>Include numbers and special characters where supported.</li>
+            <li>Avoid easily guessed personal information.</li>
+            <li>Do not reuse passwords from other accounts.</li>
+            <li>Never share account passwords with other users.</li>
+            <li>Change compromised passwords immediately through approved account procedures.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-user-roles">
+    <section id="registration-role-information">
+        <h2>User Role Information</h2>
+        <p>The examination management system may support different categories of users with different academic and administrative responsibilities.</p>
+        <h3>Student Account</h3>
+        <ul>
+            <li>Access permitted student examination services.</li>
+            <li>Review examination-related information.</li>
+            <li>Participate in available examination booking processes.</li>
+            <li>Maintain personal account information.</li>
+        </ul>
+        <h3>Examiner Account</h3>
+        <ul>
+            <li>Access permitted examiner services.</li>
+            <li>Review assigned examination responsibilities.</li>
+            <li>Participate in examination evaluation activities.</li>
+            <li>Manage permitted academic assessment tasks.</li>
+        </ul>
+        <h3>Role Authorization</h3>
+        <p>User permissions should be determined by the application's existing role-management and authorization rules.</p>
+    </section>
+</template>
+
+<template id="registration-submission-guidelines">
+    <section id="registration-submission-information">
+        <h2>Registration Submission Guidelines</h2>
+        <p>Before submitting the registration form, users should carefully review all entered information.</p>
+        <h3>Pre-Submission Checklist</h3>
+        <ul>
+            <li>Confirm that the full name is correct.</li>
+            <li>Verify the email address.</li>
+            <li>Check the contact number.</li>
+            <li>Confirm the department information.</li>
+            <li>Review password security.</li>
+            <li>Ensure that all required fields are completed.</li>
+        </ul>
+        <h3>After Registration</h3>
+        <p>Users should follow the application's existing account creation and authorization process. Additional verification or approval may be required according to institutional policy.</p>
+    </section>
+</template>
+
+<template id="registration-account-verification">
+    <section id="account-verification-information">
+        <h2>Account Verification and Approval</h2>
+        <p>Account verification helps ensure that registration information is accurate and that access is granted according to institutional requirements.</p>
+        <h3>Verification Activities</h3>
+        <ul>
+            <li>Review submitted registration information.</li>
+            <li>Check user identity details against authorized records.</li>
+            <li>Verify academic department information.</li>
+            <li>Identify incomplete or inconsistent information.</li>
+            <li>Follow the institution's account approval procedures.</li>
+        </ul>
+        <h3>Account Access</h3>
+        <p>Account access should follow the existing authentication and authorization rules of the examination management application.</p>
+    </section>
+</template>
+
+<template id="registration-data-privacy">
+    <section id="registration-privacy-information">
+        <h2>Registration Data Privacy</h2>
+        <p>Registration information may contain personal and account-related details. Such information should be handled responsibly and protected from unauthorized disclosure.</p>
+        <h3>Privacy Guidelines</h3>
+        <ul>
+            <li>Collect only information required for legitimate institutional purposes.</li>
+            <li>Restrict access to authorized personnel.</li>
+            <li>Protect personal contact information.</li>
+            <li>Maintain appropriate account security.</li>
+            <li>Avoid sharing registration information without authorization.</li>
+            <li>Follow applicable institutional data protection policies.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-account-responsibilities">
+    <section id="account-holder-responsibilities">
+        <h2>Registered User Responsibilities</h2>
+        <p>Every registered user is responsible for maintaining the accuracy and security of their account information.</p>
+        <ul>
+            <li>Provide accurate registration details.</li>
+            <li>Keep login credentials confidential.</li>
+            <li>Use the account only for authorized purposes.</li>
+            <li>Maintain updated contact information.</li>
+            <li>Follow institutional examination policies.</li>
+            <li>Report suspected unauthorized account activity.</li>
+            <li>Sign out after using shared or public computers.</li>
+            <li>Avoid sharing confidential examination information.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-common-errors">
+    <section id="registration-error-information">
+        <h2>Common Registration Issues</h2>
+        <p>Users may encounter registration problems when the submitted information is incomplete, incorrectly formatted, or inconsistent with existing account records.</p>
+        <h3>Common Issues</h3>
+        <ul>
+            <li>Missing required registration information.</li>
+            <li>Incorrect email address format.</li>
+            <li>Invalid contact number length.</li>
+            <li>Incorrect department information.</li>
+            <li>Weak or unsuitable passwords.</li>
+            <li>Duplicate account registration.</li>
+            <li>Unexpected registration submission errors.</li>
+        </ul>
+        <h3>Recommended Actions</h3>
+        <p>Review all entered information, correct any mistakes, and follow the application's existing registration procedures. Contact the authorized administrator if the problem continues.</p>
+    </section>
+</template>
+
+<template id="registration-login-information">
+    <section id="registration-login-support">
+        <h2>Login and Account Access</h2>
+        <p>After completing registration, users can access the login page through the application's existing login process.</p>
+        <h3>Login Preparation</h3>
+        <ul>
+            <li>Use the registered email address or supported account identifier.</li>
+            <li>Enter the correct account password.</li>
+            <li>Verify that the correct account credentials are being used.</li>
+            <li>Follow any account verification requirements.</li>
+        </ul>
+        <h3>Account Access Support</h3>
+        <p>Users experiencing login difficulties should verify their credentials and contact the authorized administrator when additional assistance is required.</p>
+    </section>
+</template>
+
+<template id="registration-administration-guidelines">
+    <section id="registration-administration-information">
+        <h2>Registration Administration</h2>
+        <p>Registration administration helps maintain reliable user account records and supports the overall operation of the examination management system.</p>
+        <h3>Administrative Responsibilities</h3>
+        <ul>
+            <li>Review registration submissions.</li>
+            <li>Maintain accurate account information.</li>
+            <li>Verify user details according to institutional requirements.</li>
+            <li>Manage account authorization through existing administrative controls.</li>
+            <li>Protect confidential user information.</li>
+            <li>Review registration-related issues.</li>
+            <li>Maintain appropriate administrative records.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="registration-support-information">
+    <section id="registration-help-and-support">
+        <h2>Registration Help and Support</h2>
+        <p>Registration support provides guidance to users who need assistance with account creation, personal information, department details, or login access.</p>
+        <h3>Support Categories</h3>
+        <ul>
+            <li>Registration form assistance.</li>
+            <li>Email address correction requests.</li>
+            <li>Contact information assistance.</li>
+            <li>Department information clarification.</li>
+            <li>Account verification questions.</li>
+            <li>Password and login assistance.</li>
+        </ul>
+        <p>Users should contact the appropriate institutional support personnel for issues that cannot be resolved through the existing application.</p>
+    </section>
+</template>
+
+<template id="registration-policy-information">
+    <section id="registration-policy-guidelines">
+        <h2>Registration Policies and Guidelines</h2>
+        <p>All registration activities should follow the academic, administrative, security, and privacy policies established by the institution.</p>
+        <ul>
+            <li>Submit genuine and accurate information.</li>
+            <li>Follow the approved registration procedure.</li>
+            <li>Maintain confidentiality of account credentials.</li>
+            <li>Use the system for authorized academic purposes.</li>
+            <li>Respect institutional examination regulations.</li>
+            <li>Follow applicable account verification requirements.</li>
+            <li>Keep personal and academic records accurate.</li>
+        </ul>
+    </section>
+</template>
+
+{% endblock %}

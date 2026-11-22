@@ -1,0 +1,622 @@
+
+{% extends "examiner_base.html" %}
+
+{% block title %}
+    Student Booking Management
+{% endblock %}
+
+{% block examiner_content %}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between
+            align-items-center flex-wrap mb-4">
+
+    <div>
+        <h2 class="fw-bold">
+            Student Bookings
+        </h2>
+
+        <p class="text-secondary">
+            View and manage examination booking records.
+        </p>
+    </div>
+
+    <span class="badge bg-primary p-2">
+        Booking Management
+    </span>
+
+</div>
+
+
+<!-- Information Card -->
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex align-items-start gap-3">
+
+            <div class="fs-3">
+                <i class="bi bi-info-circle"></i>
+            </div>
+
+            <div>
+
+                <h6 class="fw-bold">
+                    Booking Information
+                </h6>
+
+                <p class="text-secondary mb-0">
+                    This section displays students who have
+                    registered for available examination slots.
+                    You can search the records and review their
+                    current booking status.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Booking Search -->
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body p-4">
+
+        <h5 class="fw-bold mb-3">
+            Search Booking Records
+        </h5>
+
+        <form action="{{ url_for('booked_students') }}"
+              method="GET">
+
+            <div class="row g-3">
+
+                <div class="col-md-8">
+
+                    <label for="booking-search"
+                           class="form-label">
+
+                        Search Student
+
+                    </label>
+
+                    <input type="search"
+                           id="booking-search"
+                           class="form-control"
+                           name="search"
+                           value="{{ search }}"
+                           placeholder="Enter student name, course code or ID">
+
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+
+                    <button type="submit"
+                            class="btn btn-success me-2">
+
+                        Search
+
+                    </button>
+
+                    <a href="{{ url_for('booked_students') }}"
+                       class="btn btn-secondary">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Booking Table -->
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white py-3">
+
+        <h5 class="mb-0 fw-bold">
+            Booking Records
+        </h5>
+
+        <small class="text-secondary">
+            Examination registration details
+        </small>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover
+                          align-middle text-center"
+                   id="booking-table">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th scope="col">ID</th>
+
+                        <th scope="col">Student</th>
+
+                        <th scope="col">Examination</th>
+
+                        <th scope="col">Slot ID</th>
+
+                        <th scope="col">Booked Date</th>
+
+                        <th scope="col">Status</th>
+
+                        <th scope="col">Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if booking_list|length > 0 %}
+
+                        {% for book in booking_list %}
+
+                        <tr>
+
+                            <td>
+                                <span class="fw-bold">
+                                    {{ book.id }}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ book.student.user.username }}
+                                </div>
+
+                                <small class="text-secondary">
+                                    Registered Student
+                                </small>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ book.slot.exam.name }}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="badge bg-secondary">
+                                    {{ book.slot_id }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ book.date.strftime("%d %b %Y") }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% set current_status =
+                                    book.status|string|lower %}
+
+                                {% if current_status == 'confirmed'
+                                      or current_status == 'approved' %}
+
+                                    <span class="badge bg-success">
+                                        {{ book.status }}
+                                    </span>
+
+                                {% elif current_status == 'pending' %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ book.status }}
+                                    </span>
+
+                                {% elif current_status == 'cancelled'
+                                      or current_status == 'rejected' %}
+
+                                    <span class="badge bg-danger">
+                                        {{ book.status }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ book.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <a href="{{ url_for(
+                                    'booked_students',
+                                    exam_id=book.id
+                                ) }}"
+                                   class="btn btn-outline-primary btn-sm">
+
+                                    View Details
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <h5 class="text-secondary">
+                                    No Booking Records Found
+                                </h5>
+
+                                <p class="text-secondary mb-0">
+                                    There are no bookings matching
+                                    the current search criteria.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Table Footer -->
+    <div class="card-footer bg-white">
+
+        <small class="text-secondary">
+            Examination Management Portal |
+            Student Booking Section
+        </small>
+
+    </div>
+
+</div>
+
+
+<!-- Booking Page JavaScript -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const searchInput =
+        document.getElementById("booking-search");
+
+    const bookingTable =
+        document.getElementById("booking-table");
+
+
+    // Check whether required elements exist.
+    if (!searchInput || !bookingTable) {
+        return;
+    }
+
+
+    // Provide keyboard shortcut information.
+    searchInput.setAttribute(
+        "title",
+        "Enter a keyword and press Enter to search"
+    );
+
+
+    // Prevent accidental whitespace in the search field.
+    searchInput.addEventListener("blur", function() {
+
+        this.value = this.value.trim();
+
+    });
+
+
+    // Highlight the booking table when it is focused.
+    bookingTable.setAttribute("tabindex", "0");
+
+});
+
+</script>
+
+<template id="booking-detail-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Booking Details</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Booking Reference</dt>
+                <dd class="col-sm-8">Booking reference information</dd>
+
+                <dt class="col-sm-4">Booking Status</dt>
+                <dd class="col-sm-8">Current booking status</dd>
+
+                <dt class="col-sm-4">Registration Date</dt>
+                <dd class="col-sm-8">Registration date information</dd>
+
+                <dt class="col-sm-4">Last Updated</dt>
+                <dd class="col-sm-8">Last update information</dd>
+            </dl>
+        </div>
+    </section>
+</template>
+
+<template id="student-information-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Student Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Student Name</h6>
+                    <p class="fw-semibold">Student name information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Student ID</h6>
+                    <p class="fw-semibold">Student identification number</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Course</h6>
+                    <p class="fw-semibold">Course information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Registration Status</h6>
+                    <p class="fw-semibold">Registration status information</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="examination-information-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examination Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Examination Name</th>
+                            <td>Examination name information</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Examination Code</th>
+                            <td>Examination code information</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Course Category</th>
+                            <td>Course category information</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Examination Duration</th>
+                            <td>Duration information</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Examination Description</th>
+                            <td>Description information</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="slot-information-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examination Slot Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <h6 class="text-secondary">Slot Reference</h6>
+                    <p>Slot identification information</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-secondary">Examination Date</h6>
+                    <p>Scheduled date information</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-secondary">Available Capacity</h6>
+                    <p>Slot capacity information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Starting Time</h6>
+                    <p>Starting time information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Ending Time</h6>
+                    <p>Ending time information</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="booking-status-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Booking Status Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <span class="badge bg-success p-2">Confirmed</span>
+                <span class="text-secondary">Booking status description</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <span class="badge bg-warning text-dark p-2">Pending</span>
+                <span class="text-secondary">Booking awaiting confirmation</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <span class="badge bg-danger p-2">Cancelled</span>
+                <span class="text-secondary">Booking cancellation information</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-secondary p-2">Other</span>
+                <span class="text-secondary">Other booking status information</span>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="booking-history-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Booking History</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Activity</th>
+                            <th scope="col">Previous Status</th>
+                            <th scope="col">Updated Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Activity date</td>
+                            <td>Booking registration</td>
+                            <td>Not registered</td>
+                            <td>Pending</td>
+                        </tr>
+                        <tr>
+                            <td>Activity date</td>
+                            <td>Status review</td>
+                            <td>Pending</td>
+                            <td>Confirmed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="booking-summary-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Booking Summary</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 text-center">
+                <div class="col-md-3">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-primary">Total</h4>
+                        <p class="text-secondary mb-0">Registered Bookings</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-success">Confirmed</h4>
+                        <p class="text-secondary mb-0">Approved Bookings</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-warning">Pending</h4>
+                        <p class="text-secondary mb-0">Awaiting Review</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-danger">Cancelled</h4>
+                        <p class="text-secondary mb-0">Cancelled Bookings</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="booking-empty-state-template">
+    <section class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <div class="display-4 text-secondary mb-3">
+                <i class="bi bi-calendar-x"></i>
+            </div>
+            <h5 class="fw-bold">No Booking Information Available</h5>
+            <p class="text-secondary mb-0">
+                Booking information will appear here when
+                examination registrations are available.
+            </p>
+        </div>
+    </section>
+</template>
+
+<template id="booking-guidelines-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Booking Management Guidelines</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Review student booking information carefully.
+                </li>
+                <li class="list-group-item">
+                    Verify the examination associated with each booking.
+                </li>
+                <li class="list-group-item">
+                    Check the examination slot reference and scheduled date.
+                </li>
+                <li class="list-group-item">
+                    Review the current status of each registration.
+                </li>
+                <li class="list-group-item">
+                    Use the search field to locate specific booking records.
+                </li>
+                <li class="list-group-item">
+                    Confirm that booking information is accurate before
+                    making administrative decisions.
+                </li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

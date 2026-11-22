@@ -1,0 +1,576 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Examiners{% endblock %}
+
+{% block main %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>  
+            <h2>Manage Examiners</h2>
+            <p>Review registration and manage examiners ...</p>
+        </div>
+        <div class="badge text-bg-primary">Total Examiners : {{ examiners|length }}</div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Examiners List</h5>
+            <form action="{{ url_for("manage_examiners") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by Id, name, email, department, status">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_examiners") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Examiner</th>
+                        <th>Examiner Id</th>
+                        <th>Department</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for examiner in examiners %}
+                    <tr>
+                        <td>{{ examiner.id }}</td>
+                        <td>{{ examiner.user.username }}</td>
+                        <td>{{ examiner.user.email }}</td>
+                        <td>{{ examiner.department }}</td>
+                        <td>{{ examiner.mob }}</td>
+                        <td>{{ examiner.status }}</td>
+                        <td>
+                            {% if examiner.status =="Pending" %}
+                                <a href="/admin/update/examiner/approve/{{ examiner.id }}" class="btn btn-outline-success btn-sm">Approve</a>
+                                <a href="/admin/update/examiner/reject/{{ examiner.id }}" class="btn btn-outline-danger btn-sm">Reject</a>
+                            {% elif examiner.status =="Active" %}
+                                <a href="/admin/update/examiner/reject/{{ examiner.id }}" class="btn btn-outline-danger btn-sm">Deactivate</a>
+                            {% else %}
+                                <p>--</p>    
+                            {% endif %}              
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<template id="examiner-profile-management">
+    <section>
+        <header>
+            <h2>Examiner Profile Management</h2>
+            <p>Additional information for examiner administration.</p>
+        </header>
+
+        <div>
+            <h3>Professional Information</h3>
+
+            <div>
+                <label>Examiner Full Name</label>
+                <input type="text" name="examiner_full_name">
+            </div>
+
+            <div>
+                <label>Examiner Identification Number</label>
+                <input type="text" name="examiner_identification_number">
+            </div>
+
+            <div>
+                <label>Official Email Address</label>
+                <input type="email" name="examiner_official_email">
+            </div>
+
+            <div>
+                <label>Contact Number</label>
+                <input type="tel" name="examiner_contact_number">
+            </div>
+
+            <div>
+                <label>Department</label>
+                <input type="text" name="examiner_department">
+            </div>
+
+            <div>
+                <label>Designation</label>
+                <select name="examiner_designation">
+                    <option value="">Select Designation</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Associate Professor">Associate Professor</option>
+                    <option value="Assistant Professor">Assistant Professor</option>
+                    <option value="Lecturer">Lecturer</option>
+                    <option value="Visiting Faculty">Visiting Faculty</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Employment Type</label>
+                <select name="examiner_employment_type">
+                    <option value="">Select Employment Type</option>
+                    <option value="Permanent">Permanent</option>
+                    <option value="Temporary">Temporary</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Visiting">Visiting</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Years of Experience</label>
+                <input type="number" name="examiner_experience" min="0">
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-qualification-management">
+    <section>
+        <header>
+            <h2>Examiner Qualifications</h2>
+            <p>Maintain academic qualifications and professional expertise.</p>
+        </header>
+
+        <div>
+            <h3>Academic Qualifications</h3>
+
+            <div>
+                <label>Highest Qualification</label>
+                <select name="highest_qualification">
+                    <option value="">Select Qualification</option>
+                    <option value="Bachelor">Bachelor Degree</option>
+                    <option value="Master">Master Degree</option>
+                    <option value="MPhil">M.Phil</option>
+                    <option value="PhD">Ph.D</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Specialization</label>
+                <input type="text" name="examiner_specialization">
+            </div>
+
+            <div>
+                <label>University or Institution</label>
+                <input type="text" name="qualification_institution">
+            </div>
+
+            <div>
+                <label>Year of Completion</label>
+                <input type="number" name="qualification_completion_year" min="1950" max="2100">
+            </div>
+
+            <div>
+                <label>Professional Certifications</label>
+                <textarea name="professional_certifications" rows="3"></textarea>
+            </div>
+
+            <div>
+                <label>Research and Publications</label>
+                <textarea name="research_publications" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Subject Expertise</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Code</th>
+                        <th>Subject Name</th>
+                        <th>Expertise Level</th>
+                        <th>Experience</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CS1001</td>
+                        <td>Programming Fundamentals</td>
+                        <td>Advanced</td>
+                        <td>5 Years</td>
+                    </tr>
+                    <tr>
+                        <td>CS2001</td>
+                        <td>Data Structures</td>
+                        <td>Intermediate</td>
+                        <td>3 Years</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-department-allocation">
+    <section>
+        <header>
+            <h2>Examiner Department Allocation</h2>
+            <p>Maintain examiner department and academic responsibilities.</p>
+        </header>
+
+        <div>
+            <h3>Department Information</h3>
+
+            <div>
+                <label>Department Name</label>
+                <input type="text" name="allocation_department">
+            </div>
+
+            <div>
+                <label>Department Code</label>
+                <input type="text" name="allocation_department_code">
+            </div>
+
+            <div>
+                <label>Faculty Category</label>
+                <select name="faculty_category">
+                    <option value="">Select Category</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Science">Science</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Management">Management</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Department Coordinator</label>
+                <input type="text" name="department_coordinator">
+            </div>
+
+            <div>
+                <label>Allocation Status</label>
+                <select name="department_allocation_status">
+                    <option value="">Select Status</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Academic Responsibilities</h3>
+
+            <ul>
+                <li>Participate in assigned examination activities.</li>
+                <li>Review academic examination schedules.</li>
+                <li>Maintain subject-related examination records.</li>
+                <li>Support examination evaluation activities.</li>
+                <li>Follow department examination policies.</li>
+                <li>Coordinate with examination administrators.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-verification-management">
+    <section>
+        <header>
+            <h2>Examiner Verification and Approval</h2>
+            <p>Additional records for examiner registration verification.</p>
+        </header>
+
+        <div>
+            <h3>Verification Details</h3>
+
+            <div>
+                <label>Identity Verification Status</label>
+                <select name="identity_verification_status">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Email Verification Status</label>
+                <select name="email_verification_status">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Not Verified">Not Verified</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Qualification Verification</label>
+                <select name="qualification_verification">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Incomplete">Incomplete</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Verification Date</label>
+                <input type="date" name="examiner_verification_date">
+            </div>
+
+            <div>
+                <label>Verified By</label>
+                <input type="text" name="examiner_verified_by">
+            </div>
+
+            <div>
+                <label>Verification Remarks</label>
+                <textarea name="examiner_verification_remarks" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Approval Review Checklist</h3>
+
+            <ul>
+                <li>Review examiner registration information.</li>
+                <li>Verify examiner identification details.</li>
+                <li>Check registered email address.</li>
+                <li>Review contact information.</li>
+                <li>Verify department allocation.</li>
+                <li>Review academic qualifications.</li>
+                <li>Confirm registration status.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-workload-management">
+    <section>
+        <header>
+            <h2>Examiner Workload Management</h2>
+            <p>Maintain examination assignment and workload information.</p>
+        </header>
+
+        <div>
+            <h3>Workload Configuration</h3>
+
+            <div>
+                <label>Maximum Examination Assignments</label>
+                <input type="number" name="maximum_exam_assignments" min="0">
+            </div>
+
+            <div>
+                <label>Current Examination Assignments</label>
+                <input type="number" name="current_exam_assignments" min="0">
+            </div>
+
+            <div>
+                <label>Available Working Hours</label>
+                <input type="number" name="available_working_hours" min="0">
+            </div>
+
+            <div>
+                <label>Assigned Working Hours</label>
+                <input type="number" name="assigned_working_hours" min="0">
+            </div>
+
+            <div>
+                <label>Workload Status</label>
+                <select name="examiner_workload_status">
+                    <option value="">Select Status</option>
+                    <option value="Available">Available</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Full">Full</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Examination Assignment Records</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Assignment ID</th>
+                        <th>Examination</th>
+                        <th>Course</th>
+                        <th>Assignment Date</th>
+                        <th>Assignment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ASN001</td>
+                        <td>Semester Examination</td>
+                        <td>CS1001</td>
+                        <td>Assignment Date</td>
+                        <td>Assigned</td>
+                    </tr>
+                    <tr>
+                        <td>ASN002</td>
+                        <td>Practical Examination</td>
+                        <td>CS2001</td>
+                        <td>Assignment Date</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-performance-monitoring">
+    <section>
+        <header>
+            <h2>Examiner Performance Monitoring</h2>
+            <p>Maintain examiner activity and evaluation performance records.</p>
+        </header>
+
+        <div>
+            <h3>Performance Information</h3>
+
+            <div>
+                <label>Examinations Conducted</label>
+                <input type="number" name="examinations_conducted" min="0">
+            </div>
+
+            <div>
+                <label>Evaluations Completed</label>
+                <input type="number" name="evaluations_completed" min="0">
+            </div>
+
+            <div>
+                <label>Pending Evaluations</label>
+                <input type="number" name="pending_evaluations" min="0">
+            </div>
+
+            <div>
+                <label>Average Evaluation Time</label>
+                <input type="number" name="average_evaluation_time" min="0">
+            </div>
+
+            <div>
+                <label>Performance Review Status</label>
+                <select name="performance_review_status">
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Performance Review Details</h3>
+
+            <div>
+                <label>Review Period</label>
+                <input type="text" name="performance_review_period">
+            </div>
+
+            <div>
+                <label>Review Date</label>
+                <input type="date" name="performance_review_date">
+            </div>
+
+            <div>
+                <label>Performance Remarks</label>
+                <textarea name="performance_remarks" rows="4"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-administrative-reports">
+    <section>
+        <header>
+            <h2>Examiner Administrative Reports</h2>
+            <p>Maintain examiner registration and administration statistics.</p>
+        </header>
+
+        <div>
+            <h3>Examiner Statistics</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Recorded Information</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Examiners</td>
+                        <td>Examiner Count</td>
+                        <td>Total registered examiners</td>
+                    </tr>
+                    <tr>
+                        <td>Active Examiners</td>
+                        <td>Active Count</td>
+                        <td>Currently active examiner accounts</td>
+                    </tr>
+                    <tr>
+                        <td>Pending Examiners</td>
+                        <td>Pending Count</td>
+                        <td>Registrations awaiting approval</td>
+                    </tr>
+                    <tr>
+                        <td>Rejected Examiners</td>
+                        <td>Rejected Count</td>
+                        <td>Rejected examiner registrations</td>
+                    </tr>
+                    <tr>
+                        <td>Inactive Examiners</td>
+                        <td>Inactive Count</td>
+                        <td>Currently inactive examiner accounts</td>
+                    </tr>
+                    <tr>
+                        <td>Assigned Examiners</td>
+                        <td>Assignment Count</td>
+                        <td>Examiners with examination assignments</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Administrative Report Information</h3>
+
+            <div>
+                <label>Report Category</label>
+                <select name="examiner_report_category">
+                    <option value="">Select Report Category</option>
+                    <option value="Registration">Registration Report</option>
+                    <option value="Approval">Approval Report</option>
+                    <option value="Department">Department Report</option>
+                    <option value="Workload">Workload Report</option>
+                    <option value="Performance">Performance Report</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Report Start Date</label>
+                <input type="date" name="examiner_report_start_date">
+            </div>
+
+            <div>
+                <label>Report End Date</label>
+                <input type="date" name="examiner_report_end_date">
+            </div>
+
+            <div>
+                <label>Administrative Notes</label>
+                <textarea name="examiner_administrative_notes" rows="4"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

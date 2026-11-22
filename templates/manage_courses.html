@@ -1,0 +1,624 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Manage Courses{% endblock %}
+
+{% block main %}
+<div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div>  
+            <h2>Manage Courses</h2>
+            <p>Create, Update and Manage academic courses...</p>
+        </div>
+        <div class="badge text-bg-primary">Total Courses : {{ courses|length }}</div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <h5>{{ "Edit Course" if edit_course else "Add New Course" }}</h5>
+            <form action="{{ url_for("manage_courses", edit_id=edit_course.id) if edit_course else url_for("manage_courses")}}" method="POST">
+                <div class="row g-3">
+                    <div class="mb-3 col-4">
+                        <label for="Input1" class="form-label">Course Code</label>
+                        <input type="text" class="form-control" id="Input1" name="code" placeholder="eg: CS1001" value="{{ edit_course.code if edit_course else "" }}" required>
+                    </div>
+
+                    <div class="mb-3 col-5">
+                        <label for="Input2" class="form-label">Course Name</label>
+                        <input type="text" class="form-control" id="Input2" name="name" placeholder="Enter course name" value="{{ edit_course.name if edit_course else "" }}" required>
+                    </div>
+
+                    <div class="mb-3 col-3">
+                        <label class="mb-2">Status</label>
+                        <select class="form-select" aria-label="Default select example" name="status" required>
+                            <option value="">Select status</option>
+                            <option value="Active" {% if edit_course and edit_course.status == "Active" %}selected{% endif %}>Active</option>
+                            <option value="Pending" {% if edit_course and edit_course.status == "Pending" %}selected{% endif %}>Pending</option>
+                        </select>
+                    </div>
+                
+                    <div class="mb-3 col-12">
+                        <label for="Textarea1" class="form-label">Description</label>
+                        <textarea class="form-control" id="Textarea1" rows="3" name="description" placeholder="Enter course description..." >{{ edit_course.description if edit_course else "" }}</textarea>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value={{ "Update Course" if edit_course else "Add Course" }}>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow my-3">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold">Course List</h5>
+            <form action="{{ url_for("manage_courses") }}" method="GET" class="row g-2 mb-3">
+                <div class="col-8">
+                    <input type="search" class="form-control" name="search" value="{{search}}" placeholder="Search by course code, name or Id">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Search" class="btn btn-success">
+                    <a href="{{ url_for("manage_courses") }}" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-center text-center">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.id }}</td>
+                        <td>{{ course.code }}</td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.description }}</td>
+                        <td>{{ course.status }}</td>
+                        <td>
+                            <a href="{{ url_for("manage_courses", edit_id=course.id)}}" class="btn btn-outline-primary btn-sm">Edit</a>
+                            <a href="{{ url_for('delete_course', course_id=course.id) }}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<template id="course-administration-management">
+    <section>
+        <header>
+            <h2>Course Administration</h2>
+            <p>Additional academic course administration information.</p>
+        </header>
+
+        <div>
+            <h3>Course Classification</h3>
+            <div>
+                <label>Course Category</label>
+                <select name="course_category">
+                    <option value="">Select Category</option>
+                    <option value="Core">Core Course</option>
+                    <option value="Elective">Elective Course</option>
+                    <option value="Professional">Professional Course</option>
+                    <option value="Foundation">Foundation Course</option>
+                    <option value="Laboratory">Laboratory Course</option>
+                    <option value="Project">Project Course</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Academic Level</label>
+                <select name="academic_level">
+                    <option value="">Select Academic Level</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="Postgraduate">Postgraduate</option>
+                    <option value="Research">Research</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Course Semester</label>
+                <select name="course_semester">
+                    <option value="">Select Semester</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Academic Year</label>
+                <input type="text" name="course_academic_year" placeholder="Example: 2026-2027">
+            </div>
+
+            <div>
+                <label>Course Department</label>
+                <input type="text" name="course_department">
+            </div>
+
+            <div>
+                <label>Course Coordinator</label>
+                <input type="text" name="course_coordinator">
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="course-credit-and-curriculum">
+    <section>
+        <header>
+            <h2>Course Credits and Curriculum</h2>
+            <p>Maintain academic structure and curriculum information.</p>
+        </header>
+
+        <div>
+            <h3>Course Credit Information</h3>
+
+            <div>
+                <label>Total Course Credits</label>
+                <input type="number" name="total_course_credits" min="0">
+            </div>
+
+            <div>
+                <label>Theory Credits</label>
+                <input type="number" name="theory_credits" min="0">
+            </div>
+
+            <div>
+                <label>Practical Credits</label>
+                <input type="number" name="practical_credits" min="0">
+            </div>
+
+            <div>
+                <label>Lecture Hours Per Week</label>
+                <input type="number" name="lecture_hours" min="0">
+            </div>
+
+            <div>
+                <label>Practical Hours Per Week</label>
+                <input type="number" name="practical_hours" min="0">
+            </div>
+
+            <div>
+                <label>Total Teaching Hours</label>
+                <input type="number" name="total_teaching_hours" min="0">
+            </div>
+        </div>
+
+        <div>
+            <h3>Curriculum Structure</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Unit Number</th>
+                        <th>Unit Title</th>
+                        <th>Topics Covered</th>
+                        <th>Teaching Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unit 1</td>
+                        <td>Introduction</td>
+                        <td>Fundamental concepts</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Unit 2</td>
+                        <td>Core Concepts</td>
+                        <td>Subject fundamentals</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>Unit 3</td>
+                        <td>Advanced Topics</td>
+                        <td>Advanced subject concepts</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>Unit 4</td>
+                        <td>Practical Applications</td>
+                        <td>Applied learning activities</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Unit 5</td>
+                        <td>Revision</td>
+                        <td>Review and practice</td>
+                        <td>6</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Learning Objectives</h3>
+            <textarea name="course_learning_objectives" rows="4"></textarea>
+        </div>
+
+        <div>
+            <h3>Learning Outcomes</h3>
+            <textarea name="course_learning_outcomes" rows="4"></textarea>
+        </div>
+    </section>
+</template>
+
+<template id="course-prerequisite-management">
+    <section>
+        <header>
+            <h2>Course Prerequisite Management</h2>
+            <p>Maintain prerequisite and related course information.</p>
+        </header>
+
+        <div>
+            <h3>Prerequisite Details</h3>
+
+            <div>
+                <label>Prerequisite Course Code</label>
+                <input type="text" name="prerequisite_course_code">
+            </div>
+
+            <div>
+                <label>Prerequisite Course Name</label>
+                <input type="text" name="prerequisite_course_name">
+            </div>
+
+            <div>
+                <label>Prerequisite Requirement</label>
+                <select name="prerequisite_requirement">
+                    <option value="">Select Requirement</option>
+                    <option value="Mandatory">Mandatory</option>
+                    <option value="Recommended">Recommended</option>
+                    <option value="Optional">Optional</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Minimum Required Marks</label>
+                <input type="number" name="minimum_required_marks" min="0">
+            </div>
+
+            <div>
+                <label>Prerequisite Description</label>
+                <textarea name="prerequisite_description" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Related Course Information</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Relationship</th>
+                        <th>Academic Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CS1001</td>
+                        <td>Programming Fundamentals</td>
+                        <td>Prerequisite</td>
+                        <td>Semester 1</td>
+                    </tr>
+                    <tr>
+                        <td>CS2001</td>
+                        <td>Data Structures</td>
+                        <td>Related Course</td>
+                        <td>Semester 3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="course-enrollment-management">
+    <section>
+        <header>
+            <h2>Course Enrollment Management</h2>
+            <p>Maintain student enrollment and course allocation information.</p>
+        </header>
+
+        <div>
+            <h3>Enrollment Configuration</h3>
+
+            <div>
+                <label>Maximum Enrollment Capacity</label>
+                <input type="number" name="maximum_enrollment_capacity" min="1">
+            </div>
+
+            <div>
+                <label>Minimum Enrollment Capacity</label>
+                <input type="number" name="minimum_enrollment_capacity" min="1">
+            </div>
+
+            <div>
+                <label>Enrollment Opening Date</label>
+                <input type="date" name="enrollment_opening_date">
+            </div>
+
+            <div>
+                <label>Enrollment Closing Date</label>
+                <input type="date" name="enrollment_closing_date">
+            </div>
+
+            <div>
+                <label>Enrollment Status</label>
+                <select name="enrollment_status">
+                    <option value="">Select Status</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Full">Full</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <h3>Student Enrollment Records</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Course Code</th>
+                        <th>Enrollment Date</th>
+                        <th>Enrollment Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>STU001</td>
+                        <td>Student Name</td>
+                        <td>CS1001</td>
+                        <td>Enrollment Date</td>
+                        <td>Confirmed</td>
+                    </tr>
+                    <tr>
+                        <td>STU002</td>
+                        <td>Student Name</td>
+                        <td>CS1001</td>
+                        <td>Enrollment Date</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="course-assessment-management">
+    <section>
+        <header>
+            <h2>Course Assessment Management</h2>
+            <p>Maintain course evaluation and assessment information.</p>
+        </header>
+
+        <div>
+            <h3>Assessment Configuration</h3>
+
+            <div>
+                <label>Assessment Type</label>
+                <select name="assessment_type">
+                    <option value="">Select Assessment Type</option>
+                    <option value="Internal">Internal Assessment</option>
+                    <option value="External">External Assessment</option>
+                    <option value="Practical">Practical Assessment</option>
+                    <option value="Oral">Oral Assessment</option>
+                    <option value="Project">Project Assessment</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Maximum Assessment Marks</label>
+                <input type="number" name="maximum_assessment_marks" min="0">
+            </div>
+
+            <div>
+                <label>Passing Marks</label>
+                <input type="number" name="passing_marks" min="0">
+            </div>
+
+            <div>
+                <label>Assessment Weightage</label>
+                <input type="number" name="assessment_weightage" min="0" max="100">
+            </div>
+
+            <div>
+                <label>Assessment Description</label>
+                <textarea name="assessment_description" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Assessment Components</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Assessment Type</th>
+                        <th>Maximum Marks</th>
+                        <th>Weightage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Assignment</td>
+                        <td>Internal</td>
+                        <td>20</td>
+                        <td>20%</td>
+                    </tr>
+                    <tr>
+                        <td>Practical</td>
+                        <td>Practical</td>
+                        <td>30</td>
+                        <td>30%</td>
+                    </tr>
+                    <tr>
+                        <td>Final Examination</td>
+                        <td>External</td>
+                        <td>50</td>
+                        <td>50%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="course-administration-reports">
+    <section>
+        <header>
+            <h2>Course Administration Reports</h2>
+            <p>Academic course statistics and administrative records.</p>
+        </header>
+
+        <div>
+            <h3>Course Statistics</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Information</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Courses</td>
+                        <td>Course Count</td>
+                        <td>Total courses maintained in the portal</td>
+                    </tr>
+                    <tr>
+                        <td>Active Courses</td>
+                        <td>Active Count</td>
+                        <td>Courses currently marked active</td>
+                    </tr>
+                    <tr>
+                        <td>Pending Courses</td>
+                        <td>Pending Count</td>
+                        <td>Courses awaiting approval or activation</td>
+                    </tr>
+                    <tr>
+                        <td>Student Enrollment</td>
+                        <td>Enrollment Count</td>
+                        <td>Total course enrollment records</td>
+                    </tr>
+                    <tr>
+                        <td>Academic Departments</td>
+                        <td>Department Count</td>
+                        <td>Departments offering courses</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Report Information</h3>
+
+            <div>
+                <label>Report Category</label>
+                <select name="course_report_category">
+                    <option value="">Select Report Category</option>
+                    <option value="Course">Course Report</option>
+                    <option value="Enrollment">Enrollment Report</option>
+                    <option value="Curriculum">Curriculum Report</option>
+                    <option value="Assessment">Assessment Report</option>
+                    <option value="Department">Department Report</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Report Start Date</label>
+                <input type="date" name="course_report_start_date">
+            </div>
+
+            <div>
+                <label>Report End Date</label>
+                <input type="date" name="course_report_end_date">
+            </div>
+
+            <div>
+                <label>Administrative Remarks</label>
+                <textarea name="course_administrative_remarks" rows="4"></textarea>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="course-review-and-approval">
+    <section>
+        <header>
+            <h2>Course Review and Approval</h2>
+            <p>Maintain course verification and administrative review information.</p>
+        </header>
+
+        <div>
+            <h3>Course Review Details</h3>
+
+            <div>
+                <label>Review Status</label>
+                <select name="course_review_status">
+                    <option value="">Select Review Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Reviewer Name</label>
+                <input type="text" name="course_reviewer_name">
+            </div>
+
+            <div>
+                <label>Review Date</label>
+                <input type="date" name="course_review_date">
+            </div>
+
+            <div>
+                <label>Review Remarks</label>
+                <textarea name="course_review_remarks" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <h3>Course Verification Checklist</h3>
+            <ul>
+                <li>Verify course code and course name.</li>
+                <li>Review course description.</li>
+                <li>Verify department information.</li>
+                <li>Check academic semester allocation.</li>
+                <li>Review course credit information.</li>
+                <li>Verify curriculum details.</li>
+                <li>Review assessment structure.</li>
+                <li>Confirm course status.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

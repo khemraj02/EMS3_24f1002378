@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>{% block title %}Student Portal{% endblock %}</title>
+</head>
+
+<body>
+    <nav class="navbar bg-dark">
+        <div class="container">
+            <span class="navbar-brand mb-1 h1 text-white">Student Portal</span>
+            <div class="d-flex gap-1">
+                <a href="" class="btn btn-outline-light">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-2">
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer>
+        &copy; Examination Management Portal -- Student Portal
+    </footer>
+
+
+<template id="student-portal-information">
+    <section id="student-portal-overview">
+        <h2>Student Portal Information</h2>
+        <p>The Student Portal is a centralized platform designed to support students in accessing examination-related services and academic information.</p>
+        <p>It provides an organized environment for examination participation, booking management, academic communication, and student account administration.</p>
+        <h3>Portal Objectives</h3>
+        <ul>
+            <li>Provide access to examination-related information.</li>
+            <li>Support student examination booking activities.</li>
+            <li>Help students review examination schedules.</li>
+            <li>Maintain organized student account information.</li>
+            <li>Improve communication between students and the institution.</li>
+            <li>Support transparent examination administration.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-portal-services">
+    <section id="student-services-information">
+        <h2>Student Portal Services</h2>
+        <p>The portal supports different academic and examination activities according to the permissions available to registered student accounts.</p>
+        <h3>Available Service Categories</h3>
+        <ul>
+            <li>Student account access.</li>
+            <li>Examination information review.</li>
+            <li>Examination slot availability.</li>
+            <li>Student examination booking.</li>
+            <li>Examination schedule information.</li>
+            <li>Academic course information.</li>
+            <li>Examination-related notifications.</li>
+            <li>Student support information.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-account-guidelines">
+    <section id="student-account-information">
+        <h2>Student Account Management</h2>
+        <p>A student account provides an individual identity within the examination management system. Students should maintain accurate account information and protect their login credentials.</p>
+        <h3>Account Management Guidelines</h3>
+        <ul>
+            <li>Use the registered account credentials.</li>
+            <li>Keep personal information accurate.</li>
+            <li>Protect account passwords.</li>
+            <li>Avoid sharing login credentials.</li>
+            <li>Use the portal only for authorized academic activities.</li>
+            <li>Report suspected unauthorized account access.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-examination-information">
+    <section id="student-examination-guidelines">
+        <h2>Examination Information</h2>
+        <p>Examination information helps students understand the academic assessment activities organized by their institution.</p>
+        <h3>Important Examination Details</h3>
+        <ul>
+            <li>Examination name and course information.</li>
+            <li>Examination date and scheduled time.</li>
+            <li>Assigned examination session.</li>
+            <li>Examination venue information, where applicable.</li>
+            <li>Applicable examination instructions.</li>
+            <li>Relevant academic requirements.</li>
+        </ul>
+        <p>Students should review official examination information regularly and follow the instructions provided by the institution.</p>
+    </section>
+</template>
+
+<template id="student-slot-booking-guidelines">
+    <section id="student-slot-booking-information">
+        <h2>Examination Slot Booking Guidelines</h2>
+        <p>Examination slot booking allows eligible students to reserve an available examination session according to institutional scheduling procedures.</p>
+        <h3>Booking Preparation</h3>
+        <ul>
+            <li>Review the available examination sessions.</li>
+            <li>Verify the correct examination and course.</li>
+            <li>Check the examination date and time.</li>
+            <li>Review available booking capacity.</li>
+            <li>Select an appropriate session according to institutional rules.</li>
+            <li>Review booking information before confirmation.</li>
+        </ul>
+        <h3>Booking Responsibilities</h3>
+        <ul>
+            <li>Avoid creating duplicate bookings.</li>
+            <li>Follow the permitted booking schedule.</li>
+            <li>Keep booking information available for reference.</li>
+            <li>Contact the authorized administrator if a booking problem occurs.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-booking-records">
+    <section id="student-booking-record-information">
+        <h2>Examination Booking Records</h2>
+        <p>Booking records contain information about examination sessions reserved by students.</p>
+        <h3>Booking Information Categories</h3>
+        <ul>
+            <li>Student identification information.</li>
+            <li>Examination and course details.</li>
+            <li>Reserved examination session.</li>
+            <li>Booking date and time.</li>
+            <li>Booking confirmation information.</li>
+            <li>Relevant booking status.</li>
+        </ul>
+        <p>Students should verify their booking details and report discrepancies through the appropriate institutional support channel.</p>
+    </section>
+</template>
+
+<template id="student-examination-preparation">
+    <section id="student-preparation-information">
+        <h2>Examination Preparation Guidelines</h2>
+        <p>Proper preparation helps students participate in examinations confidently and follow the required examination procedures.</p>
+        <h3>Before the Examination</h3>
+        <ul>
+            <li>Review the examination timetable.</li>
+            <li>Confirm the assigned examination session.</li>
+            <li>Understand the examination instructions.</li>
+            <li>Prepare the required academic materials.</li>
+            <li>Check any applicable examination requirements.</li>
+            <li>Reach the examination venue according to institutional instructions.</li>
+        </ul>
+        <h3>During the Examination</h3>
+        <ul>
+            <li>Follow the examiner's instructions.</li>
+            <li>Maintain examination discipline.</li>
+            <li>Use only permitted examination materials.</li>
+            <li>Complete assessment activities within the allotted time.</li>
+            <li>Follow institutional examination regulations.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-attendance-guidelines">
+    <section id="student-attendance-information">
+        <h2>Examination Attendance</h2>
+        <p>Attendance is an important part of examination administration and helps institutions maintain accurate participation records.</p>
+        <h3>Attendance Guidelines</h3>
+        <ul>
+            <li>Attend the correct examination session.</li>
+            <li>Carry the required identification documents.</li>
+            <li>Follow the attendance verification procedure.</li>
+            <li>Cooperate with authorized examination personnel.</li>
+            <li>Report attendance discrepancies promptly.</li>
+            <li>Follow institutional rules regarding absence and late arrival.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-academic-information">
+    <section id="student-academic-records">
+        <h2>Academic Information</h2>
+        <p>Academic information helps students understand their courses and examination-related academic requirements.</p>
+        <h3>Academic Information Categories</h3>
+        <ul>
+            <li>Department and academic program details.</li>
+            <li>Registered course information.</li>
+            <li>Course-wise examination details.</li>
+            <li>Assessment requirements.</li>
+            <li>Academic examination schedules.</li>
+            <li>Published examination results, where available.</li>
+        </ul>
+        <p>Students should refer to official institutional records when checking academic information.</p>
+    </section>
+</template>
+
+<template id="student-result-information">
+    <section id="student-examination-results">
+        <h2>Examination Results and Assessment</h2>
+        <p>Examination results represent the academic outcomes recorded through the institution's approved assessment process.</p>
+        <h3>Assessment Information</h3>
+        <ul>
+            <li>Course-wise assessment outcomes.</li>
+            <li>Examination marks and grades, where published.</li>
+            <li>Assessment criteria information.</li>
+            <li>Evaluation and moderation procedures.</li>
+            <li>Official result publication information.</li>
+        </ul>
+        <h3>Result Review Guidelines</h3>
+        <p>Students should review published results carefully and follow official institutional procedures when reporting an assessment discrepancy.</p>
+    </section>
+</template>
+
+<template id="student-notification-information">
+    <section id="student-notification-guidelines">
+        <h2>Student Notifications and Announcements</h2>
+        <p>Examination notifications provide important updates about academic schedules, booking arrangements, and institutional examination activities.</p>
+        <h3>Notification Categories</h3>
+        <ul>
+            <li>Examination registration announcements.</li>
+            <li>Examination timetable updates.</li>
+            <li>Slot booking information.</li>
+            <li>Booking confirmation notices.</li>
+            <li>Examination schedule changes.</li>
+            <li>Academic assessment announcements.</li>
+            <li>Important institutional instructions.</li>
+        </ul>
+        <p>Students should regularly check official communication channels for important updates.</p>
+    </section>
+</template>
+
+<template id="student-privacy-information">
+    <section id="student-data-privacy">
+        <h2>Student Data Privacy and Security</h2>
+        <p>Student accounts may contain personal and academic information. Users should protect this information and follow the institution's security policies.</p>
+        <h3>Security Guidelines</h3>
+        <ul>
+            <li>Keep login credentials confidential.</li>
+            <li>Do not share account passwords.</li>
+            <li>Use secure devices to access the portal.</li>
+            <li>Sign out after using shared computers.</li>
+            <li>Avoid accessing accounts through untrusted links.</li>
+            <li>Report suspicious account activity.</li>
+            <li>Protect confidential academic information.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-portal-responsibilities">
+    <section id="student-portal-responsibilities">
+        <h2>Student Responsibilities</h2>
+        <p>Students are responsible for following the academic and administrative requirements associated with examination participation.</p>
+        <ul>
+            <li>Maintain accurate registration information.</li>
+            <li>Use the portal for authorized purposes.</li>
+            <li>Review examination schedules regularly.</li>
+            <li>Complete booking activities within permitted periods.</li>
+            <li>Follow examination instructions.</li>
+            <li>Maintain academic integrity.</li>
+            <li>Respect examination personnel and institutional rules.</li>
+            <li>Report incorrect information through appropriate channels.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-portal-common-issues">
+    <section id="student-common-issues">
+        <h2>Common Student Portal Issues</h2>
+        <p>Students may occasionally experience account access, booking, or examination information problems.</p>
+        <h3>Common Issues</h3>
+        <ul>
+            <li>Incorrect login credentials.</li>
+            <li>Missing examination information.</li>
+            <li>Unavailable examination booking slots.</li>
+            <li>Incorrect booking details.</li>
+            <li>Outdated contact information.</li>
+            <li>Unexpected account access problems.</li>
+            <li>Discrepancies in academic information.</li>
+        </ul>
+        <h3>Recommended Actions</h3>
+        <p>Students should verify their account details, review official information, and contact authorized institutional support personnel when an issue cannot be resolved.</p>
+    </section>
+</template>
+
+<template id="student-portal-support">
+    <section id="student-support-guidelines">
+        <h2>Student Help and Support</h2>
+        <p>The student support process helps users resolve questions related to account access, examination bookings, academic information, and portal usage.</p>
+        <h3>Support Categories</h3>
+        <ul>
+            <li>Student account assistance.</li>
+            <li>Registration information correction.</li>
+            <li>Examination booking assistance.</li>
+            <li>Examination schedule clarification.</li>
+            <li>Attendance-related questions.</li>
+            <li>Academic information assistance.</li>
+            <li>Examination result clarification.</li>
+        </ul>
+        <p>For assistance, students should contact the appropriate department or authorized examination administrator.</p>
+    </section>
+</template>
+
+<template id="student-portal-policies">
+    <section id="student-portal-policy-information">
+        <h2>Student Portal Policies</h2>
+        <p>Use of the Student Portal is subject to institutional academic, examination, account security, and data protection policies.</p>
+        <ul>
+            <li>Use accurate personal and academic information.</li>
+            <li>Follow approved examination booking procedures.</li>
+            <li>Respect examination schedules and deadlines.</li>
+            <li>Maintain confidentiality of account credentials.</li>
+            <li>Follow academic integrity requirements.</li>
+            <li>Use institutional services responsibly.</li>
+            <li>Follow official instructions issued by authorized personnel.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="student-portal-feedback">
+    <section id="student-portal-feedback-information">
+        <h2>Student Feedback and Continuous Improvement</h2>
+        <p>Student feedback can help institutions identify opportunities to improve examination scheduling, portal usability, communication, and academic administration.</p>
+        <h3>Feedback Areas</h3>
+        <ul>
+            <li>Examination booking experience.</li>
+            <li>Clarity of examination information.</li>
+            <li>Accuracy of academic records.</li>
+            <li>Accessibility of student services.</li>
+            <li>Quality of institutional communication.</li>
+            <li>Effectiveness of student support.</li>
+        </ul>
+    </section>
+</template>
+
+</body>
+</html>

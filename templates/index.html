@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block button %}
+<a href="/login/0" class="btn btn-outline-light">Login</a>
+{% endblock %}
+
+{% block main %}
+<div class="text-center">
+    <h1 class="display-4">Welcome to Examination Portal</h1>
+    <p class="lead mt-3">
+        Register as: <br><br>
+        <a href="register/Student" class="btn btn-outline-dark me-2">Student</a>
+        <a href="register/Examiner" class="btn btn-outline-dark ms-2">Examiner</a>
+    </p>
+</div>
+
+<template id="examination-portal-information">
+    <section>
+        <header>
+            <h2>About the Examination Portal</h2>
+            <p>Welcome to the online examination management platform.</p>
+        </header>
+
+        <div>
+            <h3>Portal Overview</h3>
+            <p>
+                The Examination Portal provides a centralized platform
+                for managing academic examinations, student registrations,
+                examination schedules, and evaluation activities.
+            </p>
+            <p>
+                The platform supports communication between students,
+                examiners, and examination administration.
+            </p>
+        </div>
+
+        <div>
+            <h3>Portal Objectives</h3>
+            <ul>
+                <li>Provide convenient online registration.</li>
+                <li>Organize examination schedules.</li>
+                <li>Maintain examination-related information.</li>
+                <li>Support examiner evaluation activities.</li>
+                <li>Improve examination administration.</li>
+                <li>Maintain organized academic records.</li>
+                <li>Provide a centralized examination platform.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Available Portal Services</h3>
+            <ul>
+                <li>Student account registration.</li>
+                <li>Examiner account registration.</li>
+                <li>Examination information management.</li>
+                <li>Examination slot scheduling.</li>
+                <li>Student examination booking.</li>
+                <li>Examination evaluation.</li>
+                <li>Academic examination records.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="student-portal-services">
+    <section>
+        <header>
+            <h2>Student Services</h2>
+            <p>Information about services available to registered students.</p>
+        </header>
+
+        <div>
+            <h3>Student Account Services</h3>
+            <ul>
+                <li>Create a student account.</li>
+                <li>Maintain personal profile information.</li>
+                <li>Review academic information.</li>
+                <li>Access examination-related services.</li>
+                <li>Maintain registration details.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Examination Services</h3>
+            <ul>
+                <li>View available examinations.</li>
+                <li>Review examination details.</li>
+                <li>Check examination schedules.</li>
+                <li>Review available examination slots.</li>
+                <li>Manage examination booking information.</li>
+                <li>Check examination status.</li>
+                <li>Review evaluation information.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Student Academic Information</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Information Category</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Student Profile</td>
+                        <td>Personal and registration information</td>
+                    </tr>
+                    <tr>
+                        <td>Course Details</td>
+                        <td>Academic course information</td>
+                    </tr>
+                    <tr>
+                        <td>Examination Details</td>
+                        <td>Assigned examination information</td>
+                    </tr>
+                    <tr>
+                        <td>Slot Information</td>
+                        <td>Examination date and time details</td>
+                    </tr>
+                    <tr>
+                        <td>Evaluation Information</td>
+                        <td>Examination assessment records</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-portal-services">
+    <section>
+        <header>
+            <h2>Examiner Services</h2>
+            <p>Information about examination management and evaluation services.</p>
+        </header>
+
+        <div>
+            <h3>Examiner Account Services</h3>
+            <ul>
+                <li>Register as an examiner.</li>
+                <li>Maintain examiner profile information.</li>
+                <li>Review department information.</li>
+                <li>Access assigned examinations.</li>
+                <li>Maintain examination-related records.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Examination Management</h3>
+            <ul>
+                <li>Review assigned examinations.</li>
+                <li>Manage examination slots.</li>
+                <li>Schedule examination sessions.</li>
+                <li>Maintain seat capacity information.</li>
+                <li>Review examination booking details.</li>
+                <li>Monitor examination status.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Evaluation Services</h3>
+            <ul>
+                <li>Review student examination submissions.</li>
+                <li>Evaluate examination performance.</li>
+                <li>Maintain assessment records.</li>
+                <li>Review marks and evaluation details.</li>
+                <li>Maintain examination feedback.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="examination-registration-guidelines">
+    <section>
+        <header>
+            <h2>Registration Guidelines</h2>
+            <p>Important information for users creating portal accounts.</p>
+        </header>
+
+        <div>
+            <h3>Student Registration</h3>
+            <ol>
+                <li>Select the Student registration option.</li>
+                <li>Enter the required personal information.</li>
+                <li>Provide valid academic details.</li>
+                <li>Enter the required contact information.</li>
+                <li>Create account login credentials.</li>
+                <li>Review the entered information.</li>
+                <li>Submit the registration form.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Examiner Registration</h3>
+            <ol>
+                <li>Select the Examiner registration option.</li>
+                <li>Enter the required personal information.</li>
+                <li>Provide department information.</li>
+                <li>Enter valid contact details.</li>
+                <li>Create account login credentials.</li>
+                <li>Review the registration information.</li>
+                <li>Submit the registration form.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Account Security Guidelines</h3>
+            <ul>
+                <li>Use a strong and unique password.</li>
+                <li>Keep account credentials confidential.</li>
+                <li>Do not share login information.</li>
+                <li>Use accurate registration information.</li>
+                <li>Log out after completing portal activities.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="examination-process-information">
+    <section>
+        <header>
+            <h2>Examination Process</h2>
+            <p>Overview of the examination management process.</p>
+        </header>
+
+        <div>
+            <h3>Examination Workflow</h3>
+            <ol>
+                <li>Examination information is prepared.</li>
+                <li>Examination schedules are organized.</li>
+                <li>Available examination slots are maintained.</li>
+                <li>Students access examination information.</li>
+                <li>Students complete the applicable booking process.</li>
+                <li>Examination sessions are conducted.</li>
+                <li>Examiners complete evaluation activities.</li>
+                <li>Examination records are maintained.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Examination Categories</h3>
+            <ul>
+                <li>Theory Examination</li>
+                <li>Practical Examination</li>
+                <li>Oral Examination</li>
+                <li>Internal Assessment</li>
+                <li>External Assessment</li>
+                <li>Laboratory Examination</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Examination Preparation</h3>
+            <ul>
+                <li>Check examination date and time.</li>
+                <li>Review examination instructions.</li>
+                <li>Confirm the examination venue.</li>
+                <li>Carry required identification documents.</li>
+                <li>Arrive before the scheduled reporting time.</li>
+                <li>Follow examination rules and regulations.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="portal-help-and-support">
+    <section>
+        <header>
+            <h2>Help and Support</h2>
+            <p>General assistance and guidance for examination portal users.</p>
+        </header>
+
+        <div>
+            <h3>Frequently Asked Questions</h3>
+
+            <details>
+                <summary>How can I register as a student?</summary>
+                <p>
+                    Select the Student registration option and complete
+                    the required registration information.
+                </p>
+            </details>
+
+            <details>
+                <summary>How can I register as an examiner?</summary>
+                <p>
+                    Select the Examiner registration option and provide
+                    the required personal and department information.
+                </p>
+            </details>
+
+            <details>
+                <summary>How can I access my account?</summary>
+                <p>
+                    Use the Login option and enter your registered
+                    account credentials.
+                </p>
+            </details>
+
+            <details>
+                <summary>Where can I find examination information?</summary>
+                <p>
+                    Registered users can access the examination
+                    information available through their respective accounts.
+                </p>
+            </details>
+
+            <details>
+                <summary>What should I do if I enter incorrect information?</summary>
+                <p>
+                    Review the registration information carefully and
+                    contact the appropriate portal administrator if assistance
+                    is required.
+                </p>
+            </details>
+        </div>
+
+        <div>
+            <h3>Support Categories</h3>
+            <ul>
+                <li>Account Registration Assistance</li>
+                <li>Login and Account Access</li>
+                <li>Student Profile Information</li>
+                <li>Examiner Profile Information</li>
+                <li>Examination Scheduling</li>
+                <li>Examination Booking</li>
+                <li>Evaluation and Assessment</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Portal Usage Information</h3>
+            <p>
+                Users should provide accurate information, maintain
+                account security, and follow the applicable academic
+                examination guidelines while using the portal.
+            </p>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

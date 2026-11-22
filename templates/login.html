@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock%}
+
+{% block main %}
+<div class="card" id="form">
+    <div class="card-header text-center bg-primary text-white"><h3>Login</h3></div>
+    
+    <div class="card-body">
+        <form action="/login/0" method="POST">
+            
+            <div class="mb-3">
+                <label for="Email1" class="form-label">Email Id</label>
+                <input type="email" class="form-control" id="Email1" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Password1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password1" name="password" required>
+            </div>
+
+            <input type="submit" value="Login" class="btn btn-success w-100 mt-3">
+
+            <div class="text.center mt-3">
+                <p>Don't have an account?</p>
+                <a href="/register/Student">Register(Student)</a> | 
+                <a href="/register/Examiner">Register(Examiner)</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<template id="login-portal-information">
+    <section>
+        <header>
+            <h2>Examination Portal Account Access</h2>
+            <p>Secure access to the online examination management system.</p>
+        </header>
+
+        <div>
+            <h3>Portal Account Information</h3>
+            <p>
+                The Examination Portal provides account access to registered
+                students and examiners. Users can access their respective
+                examination-related services using their registered email
+                address and password.
+            </p>
+        </div>
+
+        <div>
+            <h3>Available Account Types</h3>
+            <ul>
+                <li>Student Account</li>
+                <li>Examiner Account</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Account Access Requirements</h3>
+            <ul>
+                <li>A registered email address.</li>
+                <li>A valid account password.</li>
+                <li>An existing portal account.</li>
+                <li>Accurate login credentials.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="login-instructions">
+    <section>
+        <header>
+            <h2>Login Instructions</h2>
+            <p>Follow the general instructions for accessing your account.</p>
+        </header>
+
+        <div>
+            <h3>Login Procedure</h3>
+            <ol>
+                <li>Open the Examination Portal login page.</li>
+                <li>Enter your registered email address.</li>
+                <li>Enter your account password.</li>
+                <li>Review the entered login information.</li>
+                <li>Select the Login button.</li>
+                <li>Access the services available for your account.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Email Address Guidelines</h3>
+            <ul>
+                <li>Enter the email address used during registration.</li>
+                <li>Check the spelling of the email address.</li>
+                <li>Ensure that the email address is complete.</li>
+                <li>Avoid unnecessary spaces.</li>
+                <li>Use an active registered email account.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Password Guidelines</h3>
+            <ul>
+                <li>Enter the correct account password.</li>
+                <li>Check uppercase and lowercase characters.</li>
+                <li>Check numbers and special characters.</li>
+                <li>Avoid unnecessary spaces.</li>
+                <li>Keep your password confidential.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="student-login-information">
+    <section>
+        <header>
+            <h2>Student Account Information</h2>
+            <p>Information about student access to examination services.</p>
+        </header>
+
+        <div>
+            <h3>Student Portal Services</h3>
+            <ul>
+                <li>Access student account information.</li>
+                <li>Review academic details.</li>
+                <li>View available examinations.</li>
+                <li>Check examination schedules.</li>
+                <li>Review available examination slots.</li>
+                <li>Access examination booking information.</li>
+                <li>Review examination-related updates.</li>
+                <li>Check available evaluation information.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Student Account Requirements</h3>
+            <ol>
+                <li>Complete student registration.</li>
+                <li>Provide valid registration information.</li>
+                <li>Maintain the registered email address.</li>
+                <li>Keep account credentials secure.</li>
+                <li>Use the registered credentials for login.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Student Account Information Categories</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Personal Information</td>
+                        <td>Student identity and contact details</td>
+                    </tr>
+                    <tr>
+                        <td>Academic Information</td>
+                        <td>Course and department details</td>
+                    </tr>
+                    <tr>
+                        <td>Examination Information</td>
+                        <td>Examination schedules and details</td>
+                    </tr>
+                    <tr>
+                        <td>Booking Information</td>
+                        <td>Examination slot registration details</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-login-information">
+    <section>
+        <header>
+            <h2>Examiner Account Information</h2>
+            <p>Information about examiner access to portal services.</p>
+        </header>
+
+        <div>
+            <h3>Examiner Portal Services</h3>
+            <ul>
+                <li>Access examiner account information.</li>
+                <li>Review assigned examinations.</li>
+                <li>Manage examination slots.</li>
+                <li>Maintain examination schedules.</li>
+                <li>Review student booking information.</li>
+                <li>Monitor examination sessions.</li>
+                <li>Evaluate student performance.</li>
+                <li>Maintain assessment records.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Examiner Account Requirements</h3>
+            <ol>
+                <li>Complete examiner registration.</li>
+                <li>Provide valid personal information.</li>
+                <li>Enter the registered email address.</li>
+                <li>Use the correct account password.</li>
+                <li>Maintain confidential login credentials.</li>
+            </ol>
+        </div>
+
+        <div>
+            <h3>Examiner Responsibilities</h3>
+            <ul>
+                <li>Maintain accurate examination information.</li>
+                <li>Review examination schedules.</li>
+                <li>Organize assigned examination sessions.</li>
+                <li>Maintain student evaluation records.</li>
+                <li>Follow institutional examination guidelines.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="login-security-guidelines">
+    <section>
+        <header>
+            <h2>Account Security Guidelines</h2>
+            <p>Important practices for protecting portal accounts.</p>
+        </header>
+
+        <div>
+            <h3>Password Security</h3>
+            <ul>
+                <li>Use a strong and unique password.</li>
+                <li>Do not share passwords with other users.</li>
+                <li>Avoid using easily guessed passwords.</li>
+                <li>Change compromised passwords when possible.</li>
+                <li>Do not save passwords on public computers.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Safe Account Usage</h3>
+            <ul>
+                <li>Access the portal through a trusted browser.</li>
+                <li>Avoid logging in on untrusted devices.</li>
+                <li>Do not share personal account information.</li>
+                <li>Log out after completing portal activities.</li>
+                <li>Keep personal information protected.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Security Awareness</h3>
+            <p>
+                Users should protect their login credentials and avoid
+                sharing confidential account information. Any suspected
+                unauthorized account access should be reported to the
+                appropriate portal administrator.
+            </p>
+        </div>
+    </section>
+</template>
+
+<template id="login-troubleshooting">
+    <section>
+        <header>
+            <h2>Login Troubleshooting</h2>
+            <p>General guidance for common account access problems.</p>
+        </header>
+
+        <div>
+            <h3>Common Login Issues</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Possible Reason</th>
+                        <th>Suggested Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invalid Email</td>
+                        <td>Incorrect email address</td>
+                        <td>Check the registered email address</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid Password</td>
+                        <td>Incorrect password</td>
+                        <td>Verify the entered password</td>
+                    </tr>
+                    <tr>
+                        <td>Account Not Registered</td>
+                        <td>No existing account</td>
+                        <td>Complete the registration process</td>
+                    </tr>
+                    <tr>
+                        <td>Login Not Working</td>
+                        <td>Browser or connection issue</td>
+                        <td>Check the browser and internet connection</td>
+                    </tr>
+                    <tr>
+                        <td>Account Access Problem</td>
+                        <td>Account-related issue</td>
+                        <td>Contact the portal administrator</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>Before Contacting Support</h3>
+            <ul>
+                <li>Verify the registered email address.</li>
+                <li>Check the password carefully.</li>
+                <li>Ensure that all required fields are completed.</li>
+                <li>Check your internet connection.</li>
+                <li>Try using an updated web browser.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="login-registration-support">
+    <section>
+        <header>
+            <h2>Registration and Account Support</h2>
+            <p>Information for users who do not yet have a portal account.</p>
+        </header>
+
+        <div>
+            <h3>New Student Registration</h3>
+            <p>
+                Students who do not have an existing portal account
+                should use the Student registration option available
+                on the portal.
+            </p>
+            <ul>
+                <li>Provide accurate personal details.</li>
+                <li>Enter valid academic information.</li>
+                <li>Provide a registered email address.</li>
+                <li>Create secure login credentials.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>New Examiner Registration</h3>
+            <p>
+                Examiners who do not have an existing portal account
+                should use the Examiner registration option.
+            </p>
+            <ul>
+                <li>Provide accurate personal details.</li>
+                <li>Enter department information.</li>
+                <li>Provide valid contact information.</li>
+                <li>Create secure login credentials.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Support Information</h3>
+            <ul>
+                <li>Registration assistance.</li>
+                <li>Account access assistance.</li>
+                <li>Login credential issues.</li>
+                <li>Student account information.</li>
+                <li>Examiner account information.</li>
+                <li>General portal usage guidance.</li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

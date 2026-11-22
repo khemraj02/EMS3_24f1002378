@@ -1,0 +1,431 @@
+{% extends "student_base.html" %}
+
+{% block main %}
+<div class="mb-4">
+    <a href="{{ url_for("student_exams") }}" class="mb-3 text-decoration-none">&larr; Back to examination</a>
+    <h2>{{ exam.name }}</h2>
+    <p>{{ exam.course.name }} - {{ exam.course.code }}</p>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-6">
+                <small class="text-seconadry d-block">Exam Type</small>
+                <strong>{{ exam.type }}</strong>
+            </div>
+
+            <div class="col-6">
+                <small class="text-seconadry d-block">Duration</small>
+                <strong>{{ exam.duration }} minutes</strong>
+            </div>
+
+            <div class="col-6">
+                <small class="text-seconadry d-block">Exam Type</small>
+                <strong>{{ exam.type }}</strong>
+            </div>
+
+            <div class="col-6">
+                <small class="text-seconadry d-block">Exam Type</small>
+                <strong>{{ exam.type }}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <h5 class="fw-bold">Examination Slots</h5>
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Examiner</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Seat Left</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for slot in slots %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ slot.examiner.user.username }}</td>
+                    <td>{{ slot.st.strftime("%d %b %Y") }}</td>
+                    <td>{{ slot.st }}</td>
+                    <td>{{ slot.et }}</td>
+                    <td>{{ slot.avl_seat }}/{{ slot.capacity }}</td>
+                    <td>
+                        <a href="{{ url_for('book_slot', exam_id=exam.id, slot_id=slot.id) }}" class="btn btn-outline-success btn-sm">Book Slot</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<template id="examination-slot-management">
+
+    <section id="slot-configuration-management">
+        <header>
+            <h3>Examination Slot Configuration</h3>
+            <p>Examination scheduling and slot configuration information</p>
+        </header>
+
+        <article>
+            <h4>Slot Configuration Parameters</h4>
+            <dl>
+                <dt>Slot Identification</dt>
+                <dd>Unique Slot Reference</dd>
+                <dt>Examination Association</dt>
+                <dd>Registered Examination Reference</dd>
+                <dt>Examiner Association</dt>
+                <dd>Assigned Examiner Reference</dd>
+                <dt>Slot Start Date</dt>
+                <dd>Configured Examination Date</dd>
+                <dt>Slot Start Time</dt>
+                <dd>Configured Starting Time</dd>
+                <dt>Slot End Time</dt>
+                <dd>Configured Ending Time</dd>
+                <dt>Maximum Capacity</dt>
+                <dd>Configured Student Capacity</dd>
+                <dt>Available Seats</dt>
+                <dd>Remaining Booking Capacity</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="slot-availability-management">
+        <header>
+            <h3>Slot Availability Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Availability Category</th>
+                    <th>Description</th>
+                    <th>Allocation Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Available</td>
+                    <td>Slot has remaining capacity</td>
+                    <td>Booking Permitted</td>
+                </tr>
+                <tr>
+                    <td>Limited Availability</td>
+                    <td>Only a few seats remain</td>
+                    <td>Capacity Dependent</td>
+                </tr>
+                <tr>
+                    <td>Fully Booked</td>
+                    <td>All seats are allocated</td>
+                    <td>Booking Restricted</td>
+                </tr>
+                <tr>
+                    <td>Inactive</td>
+                    <td>Slot is not accepting bookings</td>
+                    <td>Booking Restricted</td>
+                </tr>
+                <tr>
+                    <td>Cancelled</td>
+                    <td>Slot has been cancelled</td>
+                    <td>Booking Unavailable</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="slot-booking-workflow">
+        <header>
+            <h3>Slot Booking Workflow</h3>
+        </header>
+
+        <article>
+            <h4>Booking Process</h4>
+            <ol>
+                <li>Display Published Examination</li>
+                <li>Retrieve Associated Examination Slots</li>
+                <li>Check Slot Availability</li>
+                <li>Verify Remaining Seat Capacity</li>
+                <li>Validate Student Booking Eligibility</li>
+                <li>Select Appropriate Examination Slot</li>
+                <li>Submit Slot Booking Request</li>
+                <li>Confirm Booking Information</li>
+                <li>Maintain Booking History</li>
+            </ol>
+        </article>
+    </section>
+
+    <section id="slot-capacity-management">
+        <header>
+            <h3>Slot Capacity Management</h3>
+        </header>
+
+        <article>
+            <h4>Capacity Calculation Parameters</h4>
+            <dl>
+                <dt>Total Slot Capacity</dt>
+                <dd>Maximum permitted student registrations</dd>
+                <dt>Allocated Seats</dt>
+                <dd>Number of confirmed student bookings</dd>
+                <dt>Available Seats</dt>
+                <dd>Remaining registration capacity</dd>
+                <dt>Capacity Utilization</dt>
+                <dd>Percentage of allocated seats</dd>
+            </dl>
+        </article>
+
+        <article>
+            <h4>Capacity Calculation</h4>
+            <p>Available Seats = Total Capacity - Allocated Seats</p>
+            <p>Capacity Utilization = (Allocated Seats / Total Capacity) * 100</p>
+        </article>
+    </section>
+
+    <section id="examiner-assignment-management">
+        <header>
+            <h3>Examiner Assignment Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Assignment Parameter</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Examiner Reference</td>
+                    <td>Unique examiner identification</td>
+                </tr>
+                <tr>
+                    <td>Examiner Account</td>
+                    <td>Associated user account</td>
+                </tr>
+                <tr>
+                    <td>Examination Reference</td>
+                    <td>Assigned examination</td>
+                </tr>
+                <tr>
+                    <td>Slot Reference</td>
+                    <td>Assigned examination slot</td>
+                </tr>
+                <tr>
+                    <td>Assignment Date</td>
+                    <td>Date of examiner allocation</td>
+                </tr>
+                <tr>
+                    <td>Assignment Status</td>
+                    <td>Pending, Assigned or Completed</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="slot-time-validation">
+        <header>
+            <h3>Slot Time Validation</h3>
+        </header>
+
+        <article>
+            <h4>Scheduling Validation Rules</h4>
+            <ul>
+                <li>Examination start time must be valid.</li>
+                <li>Examination end time must follow the start time.</li>
+                <li>Slot dates must follow the examination schedule.</li>
+                <li>Slot duration must support the examination requirements.</li>
+                <li>Duplicate slot assignments should be avoided.</li>
+                <li>Overlapping examiner assignments require verification.</li>
+                <li>Cancelled slots must not accept new bookings.</li>
+                <li>Slot availability must reflect current booking capacity.</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="slot-booking-status-management">
+        <header>
+            <h3>Slot Booking Status Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking Status</th>
+                    <th>Meaning</th>
+                    <th>Next Possible Stage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Pending</td>
+                    <td>Booking awaiting confirmation</td>
+                    <td>Confirmed or Cancelled</td>
+                </tr>
+                <tr>
+                    <td>Confirmed</td>
+                    <td>Slot successfully allocated</td>
+                    <td>Attempted or Cancelled</td>
+                </tr>
+                <tr>
+                    <td>Cancelled</td>
+                    <td>Booking has been cancelled</td>
+                    <td>Historical Record</td>
+                </tr>
+                <tr>
+                    <td>Attempted</td>
+                    <td>Student has attempted the examination</td>
+                    <td>Evaluation</td>
+                </tr>
+                <tr>
+                    <td>Completed</td>
+                    <td>Examination process completed</td>
+                    <td>Result Processing</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="slot-cancellation-management">
+        <header>
+            <h3>Slot Cancellation Management</h3>
+        </header>
+
+        <article>
+            <h4>Cancellation Parameters</h4>
+            <dl>
+                <dt>Cancellation Reference</dt>
+                <dd>Unique Cancellation Identifier</dd>
+                <dt>Booking Reference</dt>
+                <dd>Associated Booking Record</dd>
+                <dt>Slot Reference</dt>
+                <dd>Associated Examination Slot</dd>
+                <dt>Cancellation Timestamp</dt>
+                <dd>Recorded Cancellation Date</dd>
+                <dt>Cancellation Reason</dt>
+                <dd>Reason for Booking Cancellation</dd>
+                <dt>Capacity Adjustment</dt>
+                <dd>Seat Availability Recalculation</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="slot-notification-management">
+        <header>
+            <h3>Slot Notification Management</h3>
+        </header>
+
+        <article>
+            <h4>Notification Categories</h4>
+            <ul>
+                <li>New Slot Availability</li>
+                <li>Successful Slot Booking</li>
+                <li>Booking Cancellation</li>
+                <li>Examination Date Reminder</li>
+                <li>Examination Time Reminder</li>
+                <li>Slot Schedule Modification</li>
+                <li>Examiner Assignment Update</li>
+                <li>Examination Slot Unavailability</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="slot-record-audit">
+        <header>
+            <h3>Slot Record Audit Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Audit Attribute</th>
+                    <th>Recorded Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Audit Identifier</td>
+                    <td>Unique Audit Reference</td>
+                </tr>
+                <tr>
+                    <td>Slot Identifier</td>
+                    <td>Associated Slot Reference</td>
+                </tr>
+                <tr>
+                    <td>Operation Type</td>
+                    <td>Create, Update or Cancel</td>
+                </tr>
+                <tr>
+                    <td>Previous Capacity</td>
+                    <td>Previously Configured Capacity</td>
+                </tr>
+                <tr>
+                    <td>Updated Capacity</td>
+                    <td>Modified Slot Capacity</td>
+                </tr>
+                <tr>
+                    <td>Operation Timestamp</td>
+                    <td>Recorded Operation Time</td>
+                </tr>
+                <tr>
+                    <td>Audit Status</td>
+                    <td>Verification Status</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="slot-data-integrity">
+        <header>
+            <h3>Slot Data Integrity Management</h3>
+        </header>
+
+        <article>
+            <h4>Data Integrity Requirements</h4>
+            <ul>
+                <li>Every slot must have a unique identifier.</li>
+                <li>Every slot must reference a valid examination.</li>
+                <li>Every examiner assignment must reference a valid account.</li>
+                <li>Slot capacity must be a non-negative value.</li>
+                <li>Available seats must not exceed total capacity.</li>
+                <li>Booking records must maintain valid slot references.</li>
+                <li>Slot dates and times must remain consistent.</li>
+                <li>Cancellation records must preserve booking history.</li>
+                <li>Inactive slots must not accept new bookings.</li>
+                <li>Slot modifications must maintain record consistency.</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="slot-management-reports">
+        <header>
+            <h3>Examination Slot Reporting</h3>
+        </header>
+
+        <article>
+            <h4>Reporting Categories</h4>
+            <ul>
+                <li>Total Published Examination Slots</li>
+                <li>Total Available Examination Seats</li>
+                <li>Total Allocated Examination Seats</li>
+                <li>Fully Booked Examination Slots</li>
+                <li>Cancelled Examination Slots</li>
+                <li>Examiner Assignment Records</li>
+                <li>Student Booking Records</li>
+                <li>Slot Utilization Reports</li>
+                <li>Examination Scheduling History</li>
+            </ul>
+        </article>
+    </section>
+
+</template>
+
+{% endblock %}

@@ -1,0 +1,579 @@
+{% extends "student_base.html" %}
+
+{% block main %}
+<div class="mb-3">
+    <h2>Welcome, {{ current_user.username }} !!</h2>
+    <p class="text-secondary">Your examination schedule, bookings and results at a glance...</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <div>Plublished Examinations</div>
+                <h2>{{ exam_count }}</h2>
+                <a href="{{ url_for('student_exams') }}" class="text-decoration-none">Browse Examinations →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <div>Total bookings</div>
+                <h2>{{ booking_count }}</h2>
+                <a href="{{ url_for('student_booking_history')}}" class="text-decoration-none">View booking history →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <div>Upcoming Examinations</div>
+                <h2>{{ upcoming_bookings|length }}</h2>
+                <a href="" class="text-decoration-none">View schedule →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <div>Published Results</div>
+                <h2>{{ result_count }}</h2>
+                <a href="" class="text-decoration-none">View scorecard →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h5>Upcoming Examination Schedule</h5>
+    </div>
+
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Examination</th>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for book in upcoming_bookings %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ book.slot.exam.name }}</td>
+                <td>{{ book.slot.exam.course.code }}</td>
+                <td>{{ book.slot.st.strftime("%d %b %Y") }}</td>
+                <td>{{ book.slot.st.strftime("%I:%M %p") }} - {{ book.slot.et.strftime("%I:%M %p") }}</td>
+                <td>
+                    <a href="{{ url_for('student_booking_update', book_id=book.id, action="attempt" )}}" class="btn btn-outline-success btn-sm">Attempt</a>
+                    <a href="{{ url_for('student_booking_update', book_id=book.id, action="cancel" )}}" class="btn btn-outline-success btn-sm">Cancel slot</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row g-4">
+    <div class="col-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5>Recent Bookings</h5>
+        
+                {% for book in recent_bookings %}
+                <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
+                    <div>
+                        <div class="fw-semibold">{{ book.slot.exam.name }}</div>
+                        <div class="text-secondary">Booked On: {{ book.date.strftime("%d %b %Y") }}</div>
+                    </div>
+                    <div class="badge text-bg-success">{{ book.status }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card shadow h-100">
+            <div class="card-body">
+                <h5>Recent Published Results</h5>
+
+                {% for res in recent_results %}
+                <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
+                    <div>
+                        <div class="fw-semibold">{{ res.booking.slot.exam.name }}</div>
+                        <div class="text-secondary">
+                            {{ res.booking.slot.exam.course.code }} - {{ res.eval_date.strftime("%d %b %Y") }}
+                        </div>
+                        <div>Marks: {{ res.marks_got }}/{{ res.booking.slot.exam.max_marks }}</div>
+                    </div>
+
+                    <a href="" class="btn btn-outline-info btn-sm">View Scorecard</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<template id="examination-management-data">
+
+    <section id="examination-planning">
+        <header>
+            <h3>Examination Planning</h3>
+            <p>Academic examination planning and scheduling information</p>
+        </header>
+
+        <article>
+            <h4>Examination Configuration</h4>
+            <dl>
+                <dt>Examination Identifier</dt>
+                <dd>EXAM-2026-001</dd>
+                <dt>Academic Session</dt>
+                <dd>2026-2027</dd>
+                <dt>Examination Category</dt>
+                <dd>Semester Examination</dd>
+                <dt>Examination Mode</dt>
+                <dd>Online Assessment</dd>
+                <dt>Maximum Marks</dt>
+                <dd>100</dd>
+                <dt>Passing Percentage</dt>
+                <dd>40</dd>
+                <dt>Examination Duration</dt>
+                <dd>180 Minutes</dd>
+            </dl>
+        </article>
+
+        <article>
+            <h4>Examination Lifecycle</h4>
+            <ol>
+                <li>Examination Creation</li>
+                <li>Course Mapping</li>
+                <li>Examination Scheduling</li>
+                <li>Slot Configuration</li>
+                <li>Student Registration</li>
+                <li>Hall Ticket Generation</li>
+                <li>Examination Execution</li>
+                <li>Answer Evaluation</li>
+                <li>Result Processing</li>
+                <li>Result Publication</li>
+            </ol>
+        </article>
+    </section>
+
+    <section id="student-eligibility-management">
+        <header>
+            <h3>Student Eligibility Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Eligibility Parameter</th>
+                    <th>Validation Requirement</th>
+                    <th>Verification Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Student Registration</td>
+                    <td>Valid student account</td>
+                    <td>Pending Verification</td>
+                </tr>
+                <tr>
+                    <td>Course Enrollment</td>
+                    <td>Registered course</td>
+                    <td>Pending Verification</td>
+                </tr>
+                <tr>
+                    <td>Examination Application</td>
+                    <td>Valid examination booking</td>
+                    <td>Pending Verification</td>
+                </tr>
+                <tr>
+                    <td>Academic Eligibility</td>
+                    <td>Institutional requirements</td>
+                    <td>Pending Verification</td>
+                </tr>
+                <tr>
+                    <td>Payment Verification</td>
+                    <td>Applicable examination fee</td>
+                    <td>Pending Verification</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-slot-management">
+        <header>
+            <h3>Examination Slot Management</h3>
+        </header>
+
+        <article>
+            <h4>Slot Configuration</h4>
+            <dl>
+                <dt>Slot Identification</dt>
+                <dd>SLOT-001</dd>
+                <dt>Slot Allocation Type</dt>
+                <dd>Scheduled Allocation</dd>
+                <dt>Maximum Capacity</dt>
+                <dd>Institution Defined</dd>
+                <dt>Available Capacity</dt>
+                <dd>Capacity Dependent</dd>
+                <dt>Allocation Priority</dt>
+                <dd>Booking Timestamp</dd>
+                <dt>Slot Availability</dt>
+                <dd>Subject to Published Schedule</dd>
+            </dl>
+        </article>
+
+        <article>
+            <h4>Slot Allocation Stages</h4>
+            <ol>
+                <li>Slot Creation</li>
+                <li>Capacity Configuration</li>
+                <li>Availability Verification</li>
+                <li>Student Slot Selection</li>
+                <li>Booking Confirmation</li>
+                <li>Allocation Record Maintenance</li>
+            </ol>
+        </article>
+    </section>
+
+    <section id="booking-record-management">
+        <header>
+            <h3>Booking Record Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking Attribute</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Booking Reference</td>
+                    <td>Unique examination booking identifier</td>
+                </tr>
+                <tr>
+                    <td>Student Reference</td>
+                    <td>Associated student account</td>
+                </tr>
+                <tr>
+                    <td>Examination Reference</td>
+                    <td>Associated examination record</td>
+                </tr>
+                <tr>
+                    <td>Slot Reference</td>
+                    <td>Selected examination time slot</td>
+                </tr>
+                <tr>
+                    <td>Booking Timestamp</td>
+                    <td>Date and time of registration</td>
+                </tr>
+                <tr>
+                    <td>Booking Status</td>
+                    <td>Pending, Confirmed, Cancelled</td>
+                </tr>
+                <tr>
+                    <td>Attempt Status</td>
+                    <td>Not Started, In Progress, Completed</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="attendance-management">
+        <header>
+            <h3>Examination Attendance Management</h3>
+        </header>
+
+        <article>
+            <h4>Attendance Classification</h4>
+            <ul>
+                <li>Present</li>
+                <li>Absent</li>
+                <li>Late Arrival</li>
+                <li>Approved Absence</li>
+                <li>Attendance Under Verification</li>
+            </ul>
+        </article>
+
+        <article>
+            <h4>Attendance Verification Parameters</h4>
+            <dl>
+                <dt>Student Identification</dt>
+                <dd>Student Account Reference</dd>
+                <dt>Examination Identification</dt>
+                <dd>Examination Reference</dd>
+                <dt>Booking Verification</dt>
+                <dd>Confirmed Booking Record</dd>
+                <dt>Attendance Timestamp</dt>
+                <dd>Recorded Attendance Time</dd>
+                <dt>Verification Method</dt>
+                <dd>Institutional Verification</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="assessment-management">
+        <header>
+            <h3>Assessment and Evaluation Management</h3>
+        </header>
+
+        <article>
+            <h4>Evaluation Parameters</h4>
+            <dl>
+                <dt>Assessment Identifier</dt>
+                <dd>ASSESSMENT-001</dd>
+                <dt>Maximum Score</dt>
+                <dd>100</dd>
+                <dt>Minimum Passing Score</dt>
+                <dd>40</dd>
+                <dt>Evaluation Type</dt>
+                <dd>Examination Based Evaluation</dd>
+                <dt>Evaluation Status</dt>
+                <dd>Awaiting Assessment</dd>
+                <dt>Result Processing</dt>
+                <dd>Pending Verification</dd>
+            </dl>
+        </article>
+
+        <article>
+            <h4>Evaluation Workflow</h4>
+            <ol>
+                <li>Examination Submission</li>
+                <li>Submission Verification</li>
+                <li>Answer Assessment</li>
+                <li>Marks Calculation</li>
+                <li>Score Validation</li>
+                <li>Evaluation Approval</li>
+                <li>Result Preparation</li>
+            </ol>
+        </article>
+    </section>
+
+    <section id="result-management">
+        <header>
+            <h3>Result Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Result Component</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Result Reference</td>
+                    <td>Unique result identification</td>
+                </tr>
+                <tr>
+                    <td>Student Reference</td>
+                    <td>Student result association</td>
+                </tr>
+                <tr>
+                    <td>Examination Reference</td>
+                    <td>Examination result association</td>
+                </tr>
+                <tr>
+                    <td>Marks Obtained</td>
+                    <td>Recorded examination score</td>
+                </tr>
+                <tr>
+                    <td>Maximum Marks</td>
+                    <td>Total available examination marks</td>
+                </tr>
+                <tr>
+                    <td>Percentage</td>
+                    <td>Calculated performance percentage</td>
+                </tr>
+                <tr>
+                    <td>Result Classification</td>
+                    <td>Pass, Fail or Pending</td>
+                </tr>
+                <tr>
+                    <td>Publication Status</td>
+                    <td>Draft, Approved or Published</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-notification-management">
+        <header>
+            <h3>Examination Notification Management</h3>
+        </header>
+
+        <article>
+            <h4>Notification Categories</h4>
+            <ul>
+                <li>New Examination Announcement</li>
+                <li>Examination Registration Reminder</li>
+                <li>Booking Confirmation</li>
+                <li>Slot Cancellation Notification</li>
+                <li>Examination Schedule Update</li>
+                <li>Upcoming Examination Reminder</li>
+                <li>Result Publication Announcement</li>
+                <li>Result Modification Notification</li>
+            </ul>
+        </article>
+
+        <article>
+            <h4>Notification Delivery Information</h4>
+            <dl>
+                <dt>Notification Reference</dt>
+                <dd>NOTIFICATION-001</dd>
+                <dt>Notification Category</dt>
+                <dd>Examination Update</dd>
+                <dt>Delivery Channel</dt>
+                <dd>Application Notification</dd>
+                <dt>Recipient Type</dt>
+                <dd>Registered Student</dd>
+                <dt>Delivery Status</dt>
+                <dd>Pending Delivery</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="examination-audit-management">
+        <header>
+            <h3>Examination Audit Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Audit Attribute</th>
+                    <th>Recorded Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Audit Reference</td>
+                    <td>Unique Audit Identifier</td>
+                </tr>
+                <tr>
+                    <td>Operation Category</td>
+                    <td>Booking, Cancellation or Evaluation</td>
+                </tr>
+                <tr>
+                    <td>Operation Timestamp</td>
+                    <td>Date and Time of Operation</td>
+                </tr>
+                <tr>
+                    <td>Associated Record</td>
+                    <td>Related Examination Record</td>
+                </tr>
+                <tr>
+                    <td>Previous Status</td>
+                    <td>Previous Record State</td>
+                </tr>
+                <tr>
+                    <td>Updated Status</td>
+                    <td>Current Record State</td>
+                </tr>
+                <tr>
+                    <td>Verification Status</td>
+                    <td>Audit Verification State</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-policy-management">
+        <header>
+            <h3>Examination Policy Management</h3>
+        </header>
+
+        <article>
+            <h4>Examination Policies</h4>
+            <ul>
+                <li>Every examination must have a valid schedule.</li>
+                <li>Student bookings must reference an available slot.</li>
+                <li>Examination capacity must be maintained.</li>
+                <li>Booking records must retain their associated references.</li>
+                <li>Cancellation operations must preserve booking history.</li>
+                <li>Assessment records must maintain valid score limits.</li>
+                <li>Results must be verified before publication.</li>
+                <li>Published examination information must remain consistent.</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-data-validation">
+        <header>
+            <h3>Examination Data Validation</h3>
+        </header>
+
+        <article>
+            <h4>Validation Requirements</h4>
+            <ul>
+                <li>Unique examination identification</li>
+                <li>Valid course association</li>
+                <li>Valid examination date and time</li>
+                <li>Valid examination duration</li>
+                <li>Non-negative booking capacity</li>
+                <li>Valid student booking reference</li>
+                <li>Valid examination result reference</li>
+                <li>Marks within the configured score range</li>
+                <li>Consistent examination status</li>
+                <li>Verified result publication status</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-performance-categories">
+        <header>
+            <h3>Academic Performance Classification</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Performance Category</th>
+                    <th>Evaluation Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Excellent</td>
+                    <td>Outstanding examination performance</td>
+                </tr>
+                <tr>
+                    <td>Very Good</td>
+                    <td>Strong academic performance</td>
+                </tr>
+                <tr>
+                    <td>Good</td>
+                    <td>Satisfactory academic performance</td>
+                </tr>
+                <tr>
+                    <td>Average</td>
+                    <td>Moderate examination performance</td>
+                </tr>
+                <tr>
+                    <td>Needs Improvement</td>
+                    <td>Additional academic preparation required</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</template>
+
+{% endblock %}

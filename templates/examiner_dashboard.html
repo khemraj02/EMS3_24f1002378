@@ -1,0 +1,759 @@
+
+{% extends "examiner_base.html" %}
+
+{% block title %}
+    Examiner Dashboard
+{% endblock %}
+
+
+{% block examiner_content %}
+
+
+<!-- Dashboard Welcome Section -->
+<div class="mb-4">
+
+    <h2 class="fw-bold">
+        Welcome, {{ current_user.username }}!
+    </h2>
+
+    <p class="text-secondary">
+        Here is an overview of your examination activities
+        and current responsibilities.
+    </p>
+
+</div>
+
+
+<!-- Dashboard Summary Cards -->
+<div class="row g-4 mb-4">
+
+
+    <!-- Total Examinations -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-secondary mb-2">
+                            Assigned Examinations
+                        </p>
+
+                        <h2 class="fw-bold">
+                            {{ total_exams }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1 text-primary">
+                        <i class="bi bi-journal-text"></i>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <a href="{{ url_for('examiner_exams') }}"
+                   class="btn btn-outline-primary btn-sm">
+
+                    View Examinations
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Upcoming Slots -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-secondary mb-2">
+                            Upcoming Slots
+                        </p>
+
+                        <h2 class="fw-bold">
+                            {{ upcoming_slots|length }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1 text-success">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <a href="{{ url_for('examiner_slots') }}"
+                   class="btn btn-outline-success btn-sm">
+
+                    View Slots
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Pending Evaluations -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-secondary mb-2">
+                            Pending Evaluations
+                        </p>
+
+                        <h2 class="fw-bold">
+                            {{ pending_eval }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1 text-warning">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <a href="{{ url_for('examiner_evals') }}"
+                   class="btn btn-outline-warning btn-sm">
+
+                    View Evaluations
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Total Bookings -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <p class="text-secondary mb-2">
+                            Total Bookings
+                        </p>
+
+                        <h2 class="fw-bold">
+                            {{ total_bookings }}
+                        </h2>
+
+                    </div>
+
+                    <div class="fs-1 text-info">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <a href="{{ url_for('booked_students') }}"
+                   class="btn btn-outline-info btn-sm">
+
+                    View Bookings
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Dashboard Information -->
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold mb-3">
+            Examiner Activity Overview
+        </h5>
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+
+                <div class="p-3 bg-light rounded">
+
+                    <h6 class="text-secondary">
+                        Examination Management
+                    </h6>
+
+                    <p class="small mb-0">
+                        View your assigned examinations and
+                        manage their related activities.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="p-3 bg-light rounded">
+
+                    <h6 class="text-secondary">
+                        Slot Management
+                    </h6>
+
+                    <p class="small mb-0">
+                        Monitor upcoming examination slots
+                        and student booking information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="p-3 bg-light rounded">
+
+                    <h6 class="text-secondary">
+                        Student Evaluation
+                    </h6>
+
+                    <p class="small mb-0">
+                        Review examination submissions and
+                        complete pending evaluation activities.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Upcoming Examination Schedule -->
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white py-3">
+
+        <div class="d-flex justify-content-between
+                    align-items-center flex-wrap">
+
+            <h5 class="fw-bold mb-0">
+                Upcoming Examination Slots
+            </h5>
+
+            <span class="badge bg-primary">
+                {{ upcoming_slots|length }} Slots
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+        {% if upcoming_slots|length == 0 %}
+
+            <div class="text-center py-5">
+
+                <h5 class="text-secondary">
+                    No Upcoming Examinations
+                </h5>
+
+                <p class="text-secondary">
+                    There are currently no upcoming examination
+                    slots assigned to your account.
+                </p>
+
+            </div>
+
+        {% else %}
+
+
+            <div class="table-responsive">
+
+                <table class="table table-hover
+                              align-middle text-center">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Examination</th>
+
+                            <th>Course</th>
+
+                            <th>Date</th>
+
+                            <th>Time</th>
+
+                            <th>Booking Capacity</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for slot in upcoming_slots %}
+
+                        <tr>
+
+                            <td>
+                                {{ slot.id }}
+                            </td>
+
+
+                            <td class="fw-semibold">
+
+                                {{ slot.exam.name }}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ slot.exam.course.code }}
+                                </div>
+
+                                <small class="text-secondary">
+                                    {{ slot.exam.course.name }}
+                                </small>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ slot.st.strftime("%d %b %Y") }}
+
+                            </td>
+
+
+                            <td>
+
+                                {{ slot.st.strftime("%I:%M %p") }}
+
+                                <span class="text-secondary">
+                                    -
+                                </span>
+
+                                {{ slot.et.strftime("%I:%M %p") }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% set booked =
+                                    slot.capacity - slot.avl_seat %}
+
+                                <div class="fw-semibold">
+
+                                    {{ booked }}/{{ slot.capacity }}
+
+                                </div>
+
+
+                                {% if slot.capacity > 0 %}
+
+                                    {% set percentage =
+                                        (booked / slot.capacity) * 100 %}
+
+                                    <div class="progress mt-2"
+                                         style="height: 7px;">
+
+                                        <div class="progress-bar"
+                                             role="progressbar"
+                                             style="width: {{ percentage }}%"
+                                             aria-valuenow="{{ percentage }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+
+                                        </div>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <small class="text-secondary">
+                                        No capacity information
+                                    </small>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="card-footer bg-white">
+
+        <small class="text-secondary">
+            Upcoming examination schedule and seat availability.
+        </small>
+
+    </div>
+
+</div>
+
+
+<!-- Dashboard JavaScript -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const dashboardCards =
+        document.querySelectorAll(".card");
+
+    dashboardCards.forEach(function(card) {
+
+        card.addEventListener("mouseenter", function() {
+
+            this.classList.add("border-primary");
+
+        });
+
+        card.addEventListener("mouseleave", function() {
+
+            this.classList.remove("border-primary");
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+<template id="examiner-profile-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examiner Profile</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Examiner Name</h6>
+                    <p class="fw-semibold">Examiner name information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Account Status</h6>
+                    <p class="fw-semibold">Account status information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Assigned Examinations</h6>
+                    <p class="fw-semibold">Examination assignment information</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-secondary">Responsibilities</h6>
+                    <p class="fw-semibold">Examiner responsibility information</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="examination-progress-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examination Progress</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Examination</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Schedule</th>
+                            <th scope="col">Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Examination information</td>
+                            <td>Course information</td>
+                            <td>Schedule information</td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    Assigned
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Examination information</td>
+                            <td>Course information</td>
+                            <td>Schedule information</td>
+                            <td>
+                                <span class="badge bg-success">
+                                    Completed
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="slot-capacity-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examination Slot Capacity</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <h4 class="fw-bold">Total</h4>
+                        <p class="text-secondary mb-0">Available Slots</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <h4 class="fw-bold text-success">Booked</h4>
+                        <p class="text-secondary mb-0">Occupied Seats</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <h4 class="fw-bold text-primary">Remaining</h4>
+                        <p class="text-secondary mb-0">Available Seats</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6 class="fw-semibold">Slot Availability Overview</h6>
+                <div class="progress" role="progressbar"
+                     aria-label="Example slot capacity"
+                     aria-valuenow="60"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     style="height: 12px;">
+                    <div class="progress-bar" style="width: 60%;"></div>
+                </div>
+                <p class="small text-secondary mt-2 mb-0">
+                    Illustrative capacity information.
+                </p>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="evaluation-summary-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Evaluation Summary</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-warning">Pending</h4>
+                        <p class="text-secondary mb-0">
+                            Evaluations awaiting review
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-success">Completed</h4>
+                        <p class="text-secondary mb-0">
+                            Evaluations already reviewed
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3">
+                        <h4 class="fw-bold text-primary">Total</h4>
+                        <p class="text-secondary mb-0">
+                            All evaluation records
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="recent-examiner-activity-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Recent Examiner Activities</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Examination assignment reviewed</span>
+                    <small class="text-secondary">Activity date</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Upcoming examination slot checked</span>
+                    <small class="text-secondary">Activity date</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Student booking information reviewed</span>
+                    <small class="text-secondary">Activity date</small>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Evaluation record updated</span>
+                    <small class="text-secondary">Activity date</small>
+                </li>
+            </ul>
+        </div>
+    </section>
+</template>
+
+<template id="examiner-dashboard-guidelines-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Examiner Dashboard Guidelines</h5>
+        </div>
+        <div class="card-body">
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <h6 class="fw-semibold">Examination Management</h6>
+                    <p class="text-secondary mb-0">
+                        Review assigned examinations and their related
+                        course information.
+                    </p>
+                </div>
+                <div class="list-group-item">
+                    <h6 class="fw-semibold">Slot Monitoring</h6>
+                    <p class="text-secondary mb-0">
+                        Monitor examination dates, scheduled times,
+                        booking capacity, and available seats.
+                    </p>
+                </div>
+                <div class="list-group-item">
+                    <h6 class="fw-semibold">Booking Review</h6>
+                    <p class="text-secondary mb-0">
+                        Review student registrations and their
+                        associated examination slots.
+                    </p>
+                </div>
+                <div class="list-group-item">
+                    <h6 class="fw-semibold">Evaluation Management</h6>
+                    <p class="text-secondary mb-0">
+                        Monitor pending evaluations and review
+                        examination submissions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-empty-state-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-body text-center py-5">
+            <div class="display-4 text-secondary mb-3">
+                <i class="bi bi-calendar2-x"></i>
+            </div>
+            <h5 class="fw-bold">No Examination Activities Available</h5>
+            <p class="text-secondary mb-0">
+                Examination schedules and activity information
+                will appear here when records are available.
+            </p>
+        </div>
+    </section>
+</template>
+
+<template id="dashboard-information-template">
+    <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="fw-bold mb-0">Dashboard Information</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-md-4">Dashboard Section</dt>
+                <dd class="col-md-8">Examiner Dashboard</dd>
+
+                <dt class="col-md-4">Main Responsibility</dt>
+                <dd class="col-md-8">
+                    Examination and evaluation management
+                </dd>
+
+                <dt class="col-md-4">Schedule Information</dt>
+                <dd class="col-md-8">
+                    Upcoming examination slots
+                </dd>
+
+                <dt class="col-md-4">Student Information</dt>
+                <dd class="col-md-8">
+                    Examination booking records
+                </dd>
+            </dl>
+        </div>
+    </section>
+</template>
+
+{% endblock %}

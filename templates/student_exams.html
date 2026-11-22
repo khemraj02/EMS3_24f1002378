@@ -1,0 +1,477 @@
+{% extends "student_base.html" %}
+
+{% block main %}
+<div class="my-4">
+    <div class="row g-3">
+        {% for exam in exams %}
+            <div class="col-4">
+                <div class="card shadow h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="badge text-bg-primary">{{ exam.type }}</div>
+                            <div class="badge text-bg-success">{{ exam.status }}</div>
+                        </div>
+                        <h5 class="fw-bold">{{ exam.name }}</h5>
+                        <p class="text-secondary small">{{ exam.course.name }} ({{ exam.course.code }})</p>
+                        <hr>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <small class="text-secondary d-block">Duration</small>
+                                <strong>{{ exam.duration }} minutes</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-secondary d-block">Maximum Marks</small>
+                                <strong>{{ exam.max_marks }}</strong>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-secondary d-block">Booking Period</small>
+                                <strong>{{ exam.sbsd.strftime("%d %b %Y") }} - {{ exam.sbed.strftime("%d %b %Y") }}</strong>
+                            </div>
+                        </div>
+                        <a href="{{ url_for("student_exam_slots", exam_id=exam.id) }}" class="btn btn-primary">View Available Slots</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<template id="student-examination-management">
+
+    <section id="examination-catalogue-management">
+        <header>
+            <h3>Examination Catalogue Management</h3>
+            <p>Academic examination catalogue and classification information</p>
+        </header>
+
+        <article>
+            <h4>Examination Classification</h4>
+            <dl>
+                <dt>Examination Reference</dt>
+                <dd>Unique Examination Identifier</dd>
+                <dt>Examination Name</dt>
+                <dd>Registered Examination Title</dd>
+                <dt>Examination Category</dt>
+                <dd>Academic Assessment Category</dd>
+                <dt>Associated Course</dt>
+                <dd>Registered Academic Course</dd>
+                <dt>Examination Duration</dt>
+                <dd>Configured Duration in Minutes</dd>
+                <dt>Maximum Marks</dt>
+                <dd>Total Available Assessment Marks</dd>
+                <dt>Examination Status</dt>
+                <dd>Current Publication Status</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="academic-course-mapping">
+        <header>
+            <h3>Academic Course Mapping</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mapping Attribute</th>
+                    <th>Description</th>
+                    <th>Validation Requirement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Course Identifier</td>
+                    <td>Unique course reference</td>
+                    <td>Valid Course</td>
+                </tr>
+                <tr>
+                    <td>Course Name</td>
+                    <td>Academic course title</td>
+                    <td>Non-empty Value</td>
+                </tr>
+                <tr>
+                    <td>Course Code</td>
+                    <td>Official course identification code</td>
+                    <td>Unique Code</td>
+                </tr>
+                <tr>
+                    <td>Examination Reference</td>
+                    <td>Associated examination identifier</td>
+                    <td>Valid Examination</td>
+                </tr>
+                <tr>
+                    <td>Academic Session</td>
+                    <td>Academic examination session</td>
+                    <td>Valid Session</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-type-classification">
+        <header>
+            <h3>Examination Type Classification</h3>
+        </header>
+
+        <article>
+            <h4>Examination Categories</h4>
+            <ul>
+                <li>Semester Examination</li>
+                <li>Mid-Term Examination</li>
+                <li>Internal Assessment</li>
+                <li>End-Term Examination</li>
+                <li>Practical Examination</li>
+                <li>Theory Examination</li>
+                <li>Online Examination</li>
+                <li>Supplementary Examination</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-publication-management">
+        <header>
+            <h3>Examination Publication Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Publication Status</th>
+                    <th>Description</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Draft</td>
+                    <td>Examination configuration in preparation</td>
+                    <td>Not Published</td>
+                </tr>
+                <tr>
+                    <td>Published</td>
+                    <td>Examination officially announced</td>
+                    <td>Visible to Students</td>
+                </tr>
+                <tr>
+                    <td>Registration Open</td>
+                    <td>Booking period is active</td>
+                    <td>Registration Permitted</td>
+                </tr>
+                <tr>
+                    <td>Registration Closed</td>
+                    <td>Booking period has ended</td>
+                    <td>Registration Restricted</td>
+                </tr>
+                <tr>
+                    <td>Completed</td>
+                    <td>Examination process completed</td>
+                    <td>Historical Examination</td>
+                </tr>
+                <tr>
+                    <td>Cancelled</td>
+                    <td>Examination has been cancelled</td>
+                    <td>Unavailable</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-registration-management">
+        <header>
+            <h3>Student Examination Registration</h3>
+        </header>
+
+        <article>
+            <h4>Registration Requirements</h4>
+            <ol>
+                <li>Identify the required examination.</li>
+                <li>Verify examination publication status.</li>
+                <li>Check the associated academic course.</li>
+                <li>Validate student registration eligibility.</li>
+                <li>Verify the examination booking period.</li>
+                <li>Retrieve available examination slots.</li>
+                <li>Select an appropriate examination slot.</li>
+                <li>Submit the booking request.</li>
+                <li>Verify booking confirmation.</li>
+                <li>Maintain the registration history.</li>
+            </ol>
+        </article>
+
+        <article>
+            <h4>Registration Information</h4>
+            <dl>
+                <dt>Registration Reference</dt>
+                <dd>Unique Registration Identifier</dd>
+                <dt>Student Reference</dt>
+                <dd>Associated Student Account</dd>
+                <dt>Examination Reference</dt>
+                <dd>Selected Examination</dd>
+                <dt>Course Reference</dt>
+                <dd>Associated Academic Course</dd>
+                <dt>Registration Date</dt>
+                <dd>Booking Creation Timestamp</dd>
+                <dt>Registration Status</dt>
+                <dd>Current Registration State</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="examination-eligibility-management">
+        <header>
+            <h3>Examination Eligibility Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Eligibility Parameter</th>
+                    <th>Verification Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Student Account</td>
+                    <td>Valid registered student account</td>
+                </tr>
+                <tr>
+                    <td>Course Enrollment</td>
+                    <td>Valid academic course association</td>
+                </tr>
+                <tr>
+                    <td>Examination Availability</td>
+                    <td>Published examination record</td>
+                </tr>
+                <tr>
+                    <td>Booking Period</td>
+                    <td>Valid examination registration dates</td>
+                </tr>
+                <tr>
+                    <td>Slot Availability</td>
+                    <td>Remaining examination seat capacity</td>
+                </tr>
+                <tr>
+                    <td>Academic Requirements</td>
+                    <td>Institutional eligibility conditions</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-duration-management">
+        <header>
+            <h3>Examination Duration Management</h3>
+        </header>
+
+        <article>
+            <h4>Duration Configuration</h4>
+            <dl>
+                <dt>Configured Duration</dt>
+                <dd>Examination Duration in Minutes</dd>
+                <dt>Scheduled Start</dt>
+                <dd>Examination Starting Timestamp</dd>
+                <dt>Scheduled End</dt>
+                <dd>Examination Ending Timestamp</dd>
+                <dt>Duration Validation</dt>
+                <dd>Start and End Time Consistency</dd>
+                <dt>Schedule Verification</dt>
+                <dd>Examination Timing Validation</dd>
+            </dl>
+        </article>
+    </section>
+
+    <section id="examination-booking-period-management">
+        <header>
+            <h3>Examination Booking Period Management</h3>
+        </header>
+
+        <article>
+            <h4>Booking Period Parameters</h4>
+            <ul>
+                <li>Registration Opening Date</li>
+                <li>Registration Closing Date</li>
+                <li>Booking Availability Window</li>
+                <li>Registration Deadline</li>
+                <li>Booking Confirmation Status</li>
+                <li>Slot Availability Period</li>
+                <li>Registration History</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-marks-management">
+        <header>
+            <h3>Examination Marks Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Marks Attribute</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Maximum Marks</td>
+                    <td>Total examination score</td>
+                </tr>
+                <tr>
+                    <td>Marks Obtained</td>
+                    <td>Student assessment score</td>
+                </tr>
+                <tr>
+                    <td>Passing Marks</td>
+                    <td>Minimum required score</td>
+                </tr>
+                <tr>
+                    <td>Percentage</td>
+                    <td>Calculated academic performance</td>
+                </tr>
+                <tr>
+                    <td>Evaluation Status</td>
+                    <td>Assessment completion state</td>
+                </tr>
+                <tr>
+                    <td>Publication Status</td>
+                    <td>Result announcement state</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-process-workflow">
+        <header>
+            <h3>Examination Process Workflow</h3>
+        </header>
+
+        <ol>
+            <li>Examination Creation</li>
+            <li>Academic Course Association</li>
+            <li>Examination Configuration</li>
+            <li>Examination Publication</li>
+            <li>Student Registration</li>
+            <li>Slot Selection</li>
+            <li>Booking Confirmation</li>
+            <li>Examination Attendance</li>
+            <li>Assessment Submission</li>
+            <li>Marks Evaluation</li>
+            <li>Result Verification</li>
+            <li>Result Publication</li>
+        </ol>
+    </section>
+
+    <section id="examination-notification-management">
+        <header>
+            <h3>Examination Notification Management</h3>
+        </header>
+
+        <article>
+            <h4>Notification Categories</h4>
+            <ul>
+                <li>New Examination Published</li>
+                <li>Registration Period Started</li>
+                <li>Registration Deadline Reminder</li>
+                <li>New Examination Slot Available</li>
+                <li>Booking Confirmation</li>
+                <li>Examination Schedule Updated</li>
+                <li>Upcoming Examination Reminder</li>
+                <li>Examination Result Published</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-validation-management">
+        <header>
+            <h3>Examination Data Validation</h3>
+        </header>
+
+        <article>
+            <h4>Data Validation Requirements</h4>
+            <ul>
+                <li>Examination identifiers must be unique.</li>
+                <li>Examination names must contain valid information.</li>
+                <li>Each examination must reference an associated course.</li>
+                <li>Examination duration must be a positive value.</li>
+                <li>Maximum marks must be a valid positive value.</li>
+                <li>Booking opening dates must precede closing dates.</li>
+                <li>Published examinations must have valid configurations.</li>
+                <li>Examination status must follow defined lifecycle stages.</li>
+                <li>Student registration must reference a valid examination.</li>
+                <li>Examination records must maintain data consistency.</li>
+            </ul>
+        </article>
+    </section>
+
+    <section id="examination-report-management">
+        <header>
+            <h3>Examination Reporting Management</h3>
+        </header>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Report Category</th>
+                    <th>Report Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Examination Catalogue</td>
+                    <td>Published examination information</td>
+                </tr>
+                <tr>
+                    <td>Course Examination Report</td>
+                    <td>Course-wise examination information</td>
+                </tr>
+                <tr>
+                    <td>Registration Report</td>
+                    <td>Student examination registration details</td>
+                </tr>
+                <tr>
+                    <td>Booking Report</td>
+                    <td>Examination slot booking information</td>
+                </tr>
+                <tr>
+                    <td>Schedule Report</td>
+                    <td>Examination date and duration details</td>
+                </tr>
+                <tr>
+                    <td>Assessment Report</td>
+                    <td>Examination evaluation information</td>
+                </tr>
+                <tr>
+                    <td>Academic Result Report</td>
+                    <td>Published examination results</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-record-audit">
+        <header>
+            <h3>Examination Record Audit Management</h3>
+        </header>
+
+        <dl>
+            <dt>Audit Reference</dt>
+            <dd>Unique Audit Record Identifier</dd>
+            <dt>Examination Reference</dt>
+            <dd>Associated Examination Identifier</dd>
+            <dt>Operation Category</dt>
+            <dd>Create, Update, Publish or Cancel</dd>
+            <dt>Previous Examination Status</dt>
+            <dd>Previously Recorded Status</dd>
+            <dt>Updated Examination Status</dt>
+            <dd>Current Recorded Status</dd>
+            <dt>Operation Timestamp</dt>
+            <dd>Recorded Modification Time</dd>
+            <dt>Audit Verification</dt>
+            <dd>Record Consistency Verification</dd>
+        </dl>
+    </section>
+
+</template>
+
+{% endblock %}

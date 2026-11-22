@@ -1,0 +1,1090 @@
+
+{% extends "examiner_base.html" %}
+
+{% block title %}
+    Student Evaluation Management
+{% endblock %}
+
+
+{% block examiner_content %}
+
+
+<!-- Evaluation Page Header -->
+<div class="mb-4">
+
+    <h2 class="fw-bold">
+        My Evaluations
+    </h2>
+
+    <p class="text-secondary">
+        Review examination records and manage student evaluations.
+    </p>
+
+</div>
+
+
+
+<!-- Evaluation Information -->
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+        <h5 class="fw-bold">
+            Evaluation Information
+        </h5>
+
+        <p class="text-secondary mb-0">
+
+            This section provides access to examinations
+            that require evaluation. Review the student details
+            and examination date before proceeding.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- Evaluation Guidelines -->
+<div class="alert alert-info border-0 shadow-sm">
+
+    <h6 class="fw-bold">
+        Evaluation Guidelines
+    </h6>
+
+    <ul class="mb-0">
+
+        <li>
+            Verify the student's examination information.
+        </li>
+
+        <li>
+            Check the examination details before evaluation.
+        </li>
+
+        <li>
+            Use the evaluation section to complete pending tasks.
+        </li>
+
+        <li>
+            Ensure that the evaluation information is accurate.
+        </li>
+
+    </ul>
+
+</div>
+
+
+
+<!-- Pending Evaluation Table -->
+<div class="card shadow-sm border-0">
+
+
+    <!-- Card Header -->
+    <div class="card-header bg-white py-3">
+
+        <div class="d-flex justify-content-between
+                    align-items-center flex-wrap">
+
+            <div>
+
+                <h5 class="fw-bold mb-1">
+                    Pending Evaluations
+                </h5>
+
+                <small class="text-secondary">
+                    Student examination evaluation records
+                </small>
+
+            </div>
+
+            <span class="badge bg-warning text-dark p-2">
+
+                {{ bookings|length }} Pending Tasks
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Table Body -->
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover
+                          align-middle text-center"
+                   id="evaluation-table">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th scope="col">
+                            #
+                        </th>
+
+                        <th scope="col">
+                            Student
+                        </th>
+
+                        <th scope="col">
+                            Examination
+                        </th>
+
+                        <th scope="col">
+                            Exam Date
+                        </th>
+
+                        <th scope="col">
+                            Status
+                        </th>
+
+                        <th scope="col">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if bookings|length > 0 %}
+
+                        {% for book in bookings %}
+
+                        <tr>
+
+                            <!-- Serial Number -->
+                            <td>
+
+                                <span class="fw-bold">
+                                    {{ loop.index }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- Student Information -->
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ book.student.user.username }}
+                                </div>
+
+                                <small class="text-secondary">
+                                    Examination Candidate
+                                </small>
+
+                            </td>
+
+
+                            <!-- Examination Information -->
+                            <td>
+
+                                {{ book.slot.exam.name }}
+
+                            </td>
+
+
+                            <!-- Examination Date -->
+                            <td>
+
+                                {{ book.slot.st.strftime("%d %b %Y") }}
+
+                            </td>
+
+
+                            <!-- Evaluation Status -->
+                            <td>
+
+                                <span class="badge bg-warning text-dark">
+
+                                    Pending
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- Evaluation Action -->
+                            <td>
+
+                                <a href="{{ url_for(
+                                    'examiner_evaluate',
+                                    book_id=book.id
+                                ) }}"
+                                   class="btn btn-success btn-sm">
+
+                                    Evaluate
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+
+                        <!-- Empty Evaluation State -->
+                        <tr>
+
+                            <td colspan="6"
+                                class="text-center py-5">
+
+                                <h5 class="text-secondary">
+                                    No Pending Evaluations
+                                </h5>
+
+                                <p class="text-secondary mb-0">
+
+                                    There are currently no student
+                                    evaluation tasks available.
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Card Footer -->
+    <div class="card-footer bg-white">
+
+        <small class="text-secondary">
+
+            Examination Management Portal |
+            Student Evaluation Section
+
+        </small>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- Evaluation Table JavaScript -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const evaluationTable =
+        document.getElementById("evaluation-table");
+
+    if (!evaluationTable) {
+        return;
+    }
+
+
+    const evaluationRows =
+        evaluationTable.querySelectorAll("tbody tr");
+
+
+    // Add row numbering accessibility.
+    evaluationRows.forEach(function(row, index) {
+
+        row.setAttribute(
+            "data-row-number",
+            index + 1
+        );
+
+    });
+
+
+    // Provide a visual indicator when
+    // the user moves through evaluation actions.
+    const evaluationButtons =
+        evaluationTable.querySelectorAll("a.btn");
+
+    evaluationButtons.forEach(function(button) {
+
+        button.addEventListener("focus", function() {
+
+            this.classList.add("shadow-sm");
+
+        });
+
+        button.addEventListener("blur", function() {
+
+            this.classList.remove("shadow-sm");
+
+        });
+
+    });
+
+});
+
+</script>
+
+
+<template id="examination-management-records">
+
+    <section id="examination-overview">
+        <header>
+            <h2>Examination Overview</h2>
+            <p>Complete examination administration records</p>
+        </header>
+
+        <div>
+            <h3>Examination Information</h3>
+            <dl>
+                <dt>Examination Identifier</dt>
+                <dd></dd>
+
+                <dt>Examination Name</dt>
+                <dd></dd>
+
+                <dt>Examination Category</dt>
+                <dd></dd>
+
+                <dt>Academic Session</dt>
+                <dd></dd>
+
+                <dt>Academic Year</dt>
+                <dd></dd>
+
+                <dt>Semester</dt>
+                <dd></dd>
+
+                <dt>Examination Duration</dt>
+                <dd></dd>
+
+                <dt>Maximum Marks</dt>
+                <dd></dd>
+
+                <dt>Passing Marks</dt>
+                <dd></dd>
+
+                <dt>Examination Mode</dt>
+                <dd></dd>
+            </dl>
+        </div>
+    </section>
+
+    <section id="candidate-registration">
+        <h2>Candidate Registration Records</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Registration Number</th>
+                    <th>Candidate Name</th>
+                    <th>Department</th>
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Registration Date</th>
+                    <th>Eligibility Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-scheduling">
+        <h2>Examination Scheduling</h2>
+
+        <dl>
+            <dt>Schedule Identifier</dt>
+            <dd></dd>
+
+            <dt>Examination Date</dt>
+            <dd></dd>
+
+            <dt>Starting Time</dt>
+            <dd></dd>
+
+            <dt>Ending Time</dt>
+            <dd></dd>
+
+            <dt>Examination Center</dt>
+            <dd></dd>
+
+            <dt>Examination Hall</dt>
+            <dd></dd>
+
+            <dt>Assigned Supervisor</dt>
+            <dd></dd>
+
+            <dt>Reporting Time</dt>
+            <dd></dd>
+
+            <dt>Schedule Confirmation</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="evaluation-criteria">
+        <h2>Evaluation Criteria</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Criteria Identifier</th>
+                    <th>Evaluation Category</th>
+                    <th>Description</th>
+                    <th>Maximum Marks</th>
+                    <th>Weightage</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>Technical Knowledge</td>
+                    <td>Understanding of subject concepts</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Practical Knowledge</td>
+                    <td>Application of theoretical concepts</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Problem Solving</td>
+                    <td>Ability to solve examination problems</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Presentation</td>
+                    <td>Clarity and organization of answers</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="evaluation-rubric">
+        <h2>Student Evaluation Rubric</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Performance Level</th>
+                    <th>Marks Range</th>
+                    <th>Knowledge Level</th>
+                    <th>Assessment Description</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Excellent</td>
+                    <td></td>
+                    <td>Advanced</td>
+                    <td>Demonstrates comprehensive subject understanding</td>
+                </tr>
+
+                <tr>
+                    <td>Very Good</td>
+                    <td></td>
+                    <td>Proficient</td>
+                    <td>Demonstrates strong subject knowledge</td>
+                </tr>
+
+                <tr>
+                    <td>Good</td>
+                    <td></td>
+                    <td>Competent</td>
+                    <td>Demonstrates satisfactory understanding</td>
+                </tr>
+
+                <tr>
+                    <td>Average</td>
+                    <td></td>
+                    <td>Developing</td>
+                    <td>Demonstrates basic subject knowledge</td>
+                </tr>
+
+                <tr>
+                    <td>Needs Improvement</td>
+                    <td></td>
+                    <td>Beginner</td>
+                    <td>Requires additional subject preparation</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="marks-management">
+        <h2>Marks Management Records</h2>
+
+        <dl>
+            <dt>Candidate Registration Number</dt>
+            <dd></dd>
+
+            <dt>Written Examination Marks</dt>
+            <dd></dd>
+
+            <dt>Practical Examination Marks</dt>
+            <dd></dd>
+
+            <dt>Internal Assessment Marks</dt>
+            <dd></dd>
+
+            <dt>External Assessment Marks</dt>
+            <dd></dd>
+
+            <dt>Total Obtained Marks</dt>
+            <dd></dd>
+
+            <dt>Maximum Obtainable Marks</dt>
+            <dd></dd>
+
+            <dt>Calculated Percentage</dt>
+            <dd></dd>
+
+            <dt>Final Grade</dt>
+            <dd></dd>
+
+            <dt>Result Classification</dt>
+            <dd></dd>
+
+            <dt>Marks Verification Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="attendance-management">
+        <h2>Examination Attendance Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Attendance Identifier</th>
+                    <th>Candidate Number</th>
+                    <th>Examination Date</th>
+                    <th>Reporting Time</th>
+                    <th>Attendance Status</th>
+                    <th>Verification Officer</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="question-paper-management">
+        <h2>Question Paper Management</h2>
+
+        <dl>
+            <dt>Question Paper Identifier</dt>
+            <dd></dd>
+
+            <dt>Subject Code</dt>
+            <dd></dd>
+
+            <dt>Question Paper Version</dt>
+            <dd></dd>
+
+            <dt>Total Questions</dt>
+            <dd></dd>
+
+            <dt>Compulsory Questions</dt>
+            <dd></dd>
+
+            <dt>Optional Questions</dt>
+            <dd></dd>
+
+            <dt>Question Distribution</dt>
+            <dd></dd>
+
+            <dt>Difficulty Classification</dt>
+            <dd></dd>
+
+            <dt>Paper Verification Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examiner-assignment">
+        <h2>Examiner Assignment Records</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Examiner Identifier</th>
+                    <th>Examiner Name</th>
+                    <th>Department</th>
+                    <th>Assigned Subject</th>
+                    <th>Assigned Candidates</th>
+                    <th>Assignment Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="evaluation-progress">
+        <h2>Evaluation Progress Records</h2>
+
+        <dl>
+            <dt>Total Assigned Scripts</dt>
+            <dd></dd>
+
+            <dt>Scripts Evaluated</dt>
+            <dd></dd>
+
+            <dt>Scripts Awaiting Evaluation</dt>
+            <dd></dd>
+
+            <dt>Scripts Under Verification</dt>
+            <dd></dd>
+
+            <dt>Scripts Requiring Review</dt>
+            <dd></dd>
+
+            <dt>Evaluation Completion Date</dt>
+            <dd></dd>
+
+            <dt>Evaluation Deadline</dt>
+            <dd></dd>
+
+            <dt>Progress Classification</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="result-verification">
+        <h2>Result Verification Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Verification Identifier</th>
+                    <th>Candidate Number</th>
+                    <th>Marks Verification</th>
+                    <th>Grade Verification</th>
+                    <th>Examiner Approval</th>
+                    <th>Final Verification Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="revaluation-management">
+        <h2>Revaluation Management</h2>
+
+        <dl>
+            <dt>Revaluation Request Identifier</dt>
+            <dd></dd>
+
+            <dt>Candidate Registration Number</dt>
+            <dd></dd>
+
+            <dt>Original Marks</dt>
+            <dd></dd>
+
+            <dt>Revised Marks</dt>
+            <dd></dd>
+
+            <dt>Revaluation Request Date</dt>
+            <dd></dd>
+
+            <dt>Assigned Revaluator</dt>
+            <dd></dd>
+
+            <dt>Revaluation Completion Date</dt>
+            <dd></dd>
+
+            <dt>Revaluation Decision</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-incident-records">
+        <h2>Examination Incident Records</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Incident Identifier</th>
+                    <th>Examination Identifier</th>
+                    <th>Candidate Number</th>
+                    <th>Incident Category</th>
+                    <th>Incident Description</th>
+                    <th>Reported Date</th>
+                    <th>Resolution Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="academic-result-classification">
+        <h2>Academic Result Classification</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Grade Identifier</th>
+                    <th>Grade Name</th>
+                    <th>Minimum Percentage</th>
+                    <th>Maximum Percentage</th>
+                    <th>Grade Point</th>
+                    <th>Academic Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>Outstanding</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Qualified</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Excellent</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Qualified</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Very Good</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Qualified</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Good</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Qualified</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Fail</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Not Qualified</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="evaluation-audit-trail">
+        <h2>Evaluation Audit Trail</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Audit Identifier</th>
+                    <th>Examination Identifier</th>
+                    <th>Examiner Identifier</th>
+                    <th>Activity Description</th>
+                    <th>Previous Record</th>
+                    <th>Updated Record</th>
+                    <th>Activity Timestamp</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="evaluation-approval">
+        <h2>Evaluation Approval Management</h2>
+
+        <dl>
+            <dt>Approval Identifier</dt>
+            <dd></dd>
+
+            <dt>Evaluation Reference Number</dt>
+            <dd></dd>
+
+            <dt>Submitted By</dt>
+            <dd></dd>
+
+            <dt>Reviewed By</dt>
+            <dd></dd>
+
+            <dt>Approval Date</dt>
+            <dd></dd>
+
+            <dt>Approval Status</dt>
+            <dd></dd>
+
+            <dt>Verification Remarks</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-document-management">
+        <h2>Examination Document Management</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Document Identifier</th>
+                    <th>Document Name</th>
+                    <th>Document Category</th>
+                    <th>Examination Reference</th>
+                    <th>Upload Date</th>
+                    <th>Document Verification</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="examination-completion">
+        <h2>Examination Completion Records</h2>
+
+        <dl>
+            <dt>Examination Reference Number</dt>
+            <dd></dd>
+
+            <dt>Evaluation Completion Status</dt>
+            <dd></dd>
+
+            <dt>Total Evaluated Candidates</dt>
+            <dd></dd>
+
+            <dt>Pending Candidate Records</dt>
+            <dd></dd>
+
+            <dt>Result Verification Status</dt>
+            <dd></dd>
+
+            <dt>Final Approval Status</dt>
+            <dd></dd>
+
+            <dt>Result Publication Date</dt>
+            <dd></dd>
+
+            <dt>Academic Record Archival Status</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+</template>
+
+<template id="examination-policy-records">
+
+    <section id="examination-rules">
+        <h2>Examination Rules and Regulations</h2>
+
+        <ul>
+            <li>Maintain examination confidentiality.</li>
+            <li>Follow the approved evaluation procedure.</li>
+            <li>Verify candidate identification records.</li>
+            <li>Maintain accurate assessment information.</li>
+            <li>Follow the prescribed marking scheme.</li>
+            <li>Complete evaluation within the assigned deadline.</li>
+            <li>Maintain academic integrity.</li>
+            <li>Report discrepancies during evaluation.</li>
+            <li>Ensure proper result verification.</li>
+            <li>Maintain examination documentation.</li>
+        </ul>
+    </section>
+
+    <section id="academic-integrity-management">
+        <h2>Academic Integrity Management</h2>
+
+        <dl>
+            <dt>Integrity Record Identifier</dt>
+            <dd></dd>
+
+            <dt>Candidate Reference Number</dt>
+            <dd></dd>
+
+            <dt>Integrity Issue Category</dt>
+            <dd></dd>
+
+            <dt>Investigation Reference</dt>
+            <dd></dd>
+
+            <dt>Investigation Officer</dt>
+            <dd></dd>
+
+            <dt>Investigation Completion Date</dt>
+            <dd></dd>
+
+            <dt>Final Investigation Decision</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section id="examination-communication">
+        <h2>Examination Communication Records</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Communication Identifier</th>
+                    <th>Recipient Category</th>
+                    <th>Communication Subject</th>
+                    <th>Communication Type</th>
+                    <th>Creation Date</th>
+                    <th>Delivery Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="academic-record-archive">
+        <h2>Academic Record Archive</h2>
+
+        <dl>
+            <dt>Archive Identifier</dt>
+            <dd></dd>
+
+            <dt>Academic Session</dt>
+            <dd></dd>
+
+            <dt>Examination Reference</dt>
+            <dd></dd>
+
+            <dt>Archived Candidate Records</dt>
+            <dd></dd>
+
+            <dt>Archived Evaluation Records</dt>
+            <dd></dd>
+
+            <dt>Archived Result Records</dt>
+            <dd></dd>
+
+            <dt>Archive Creation Date</dt>
+            <dd></dd>
+
+            <dt>Archive Verification Status</dt>
+            <dd></dd>
+
+            <dt>Archive Retention Category</dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+</template>
+
+
+{% endblock %}

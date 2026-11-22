@@ -1,0 +1,327 @@
+{% extends "admin_base.html" %}
+
+{% block main %}
+<div>
+    <img src="/static/bar.png" alt="bar graph">
+</div>
+<div>
+    <img src="/static/pie.png" alt="pie chart">
+</div>
+
+
+<template id="statistics-module-overview">
+    <section id="examination-statistics-overview">
+        <h2>Examination Management Statistics</h2>
+        <p>The statistics module provides an overview of examination management activities through graphical representations and organized statistical information.</p>
+        <p>Statistical information helps administrators understand examination operations, student participation, examiner allocation, and academic assessment activities.</p>
+        <h3>Statistics Objectives</h3>
+        <ul>
+            <li>Monitor examination management activities.</li>
+            <li>Understand student registration trends.</li>
+            <li>Review examination booking information.</li>
+            <li>Analyze examiner allocation.</li>
+            <li>Monitor examination slot utilization.</li>
+            <li>Support administrative planning and decision-making.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-chart-information">
+    <section id="statistical-chart-information">
+        <h2>Statistical Chart Information</h2>
+        <p>Charts provide a visual representation of information collected from the examination management system.</p>
+        <h3>Bar Graph</h3>
+        <p>A bar graph represents statistical values using rectangular bars. It helps administrators compare different categories of examination-related information.</p>
+        <ul>
+            <li>Compare student registration categories.</li>
+            <li>Review examination booking totals.</li>
+            <li>Compare department-wise information.</li>
+            <li>Understand differences between examination activities.</li>
+        </ul>
+        <h3>Pie Chart</h3>
+        <p>A pie chart represents information as proportional sections of a complete circle. It helps administrators understand how different categories contribute to a total.</p>
+        <ul>
+            <li>Understand category-wise distributions.</li>
+            <li>Compare proportions of examination activities.</li>
+            <li>Review the distribution of student participation.</li>
+            <li>Identify the relative contribution of different categories.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-student-analysis">
+    <section id="student-statistics-analysis">
+        <h2>Student Registration Statistics</h2>
+        <p>Student statistics provide information about registered users and their participation in examination-related activities.</p>
+        <h3>Student Statistical Categories</h3>
+        <ul>
+            <li>Total registered students.</li>
+            <li>Department-wise student distribution.</li>
+            <li>Student account registration trends.</li>
+            <li>Student examination booking totals.</li>
+            <li>Student participation records.</li>
+            <li>Incomplete registration information.</li>
+        </ul>
+        <h3>Student Data Analysis</h3>
+        <p>Administrators can use student-related statistics to understand registration patterns, identify administrative requirements, and support examination planning.</p>
+    </section>
+</template>
+
+<template id="statistics-examiner-analysis">
+    <section id="examiner-statistics-analysis">
+        <h2>Examiner Statistics</h2>
+        <p>Examiner statistics help administrators review examiner registration, department allocation, and examination responsibilities.</p>
+        <h3>Examiner Statistical Categories</h3>
+        <ul>
+            <li>Total registered examiners.</li>
+            <li>Department-wise examiner distribution.</li>
+            <li>Examiner approval and registration records.</li>
+            <li>Active and inactive examiner records.</li>
+            <li>Examination session assignments.</li>
+            <li>Examiner workload distribution.</li>
+        </ul>
+        <h3>Examiner Data Analysis</h3>
+        <p>Examiner statistics can support workload planning, resource allocation, and examination scheduling decisions.</p>
+    </section>
+</template>
+
+<template id="statistics-examination-analysis">
+    <section id="examination-statistics-analysis">
+        <h2>Examination Statistics</h2>
+        <p>Examination statistics provide an overview of examination activities conducted through the examination management system.</p>
+        <h3>Examination Statistical Categories</h3>
+        <ul>
+            <li>Total examinations created.</li>
+            <li>Course-wise examination distribution.</li>
+            <li>Scheduled examination sessions.</li>
+            <li>Completed examination sessions.</li>
+            <li>Upcoming examination activities.</li>
+            <li>Examination-wise student participation.</li>
+        </ul>
+        <h3>Examination Analysis</h3>
+        <p>Statistical analysis helps administrators understand examination activity levels and coordinate academic resources efficiently.</p>
+    </section>
+</template>
+
+<template id="statistics-booking-analysis">
+    <section id="booking-statistics-analysis">
+        <h2>Examination Booking Statistics</h2>
+        <p>Booking statistics provide information about student reservations for available examination sessions.</p>
+        <h3>Booking Statistical Categories</h3>
+        <ul>
+            <li>Total examination bookings.</li>
+            <li>Examination-wise booking distribution.</li>
+            <li>Slot-wise student reservations.</li>
+            <li>Available examination capacity.</li>
+            <li>Fully booked examination sessions.</li>
+            <li>Booking cancellation records, where maintained.</li>
+        </ul>
+        <h3>Booking Analysis</h3>
+        <p>Booking statistics help administrators understand student demand and evaluate the availability of examination sessions.</p>
+    </section>
+</template>
+
+<template id="statistics-slot-analysis">
+    <section id="slot-statistics-analysis">
+        <h2>Examination Slot Statistics</h2>
+        <p>Slot statistics provide an overview of examination session scheduling and available examination capacity.</p>
+        <h3>Slot Statistical Categories</h3>
+        <ul>
+            <li>Total examination slots.</li>
+            <li>Available examination slots.</li>
+            <li>Fully booked slots.</li>
+            <li>Completed examination slots.</li>
+            <li>Slot-wise booking capacity.</li>
+            <li>Examiner-wise session allocation.</li>
+        </ul>
+        <h3>Slot Utilization Analysis</h3>
+        <p>Slot utilization information helps administrators understand how effectively the available examination sessions are being used.</p>
+    </section>
+</template>
+
+<template id="statistics-course-analysis">
+    <section id="course-statistics-analysis">
+        <h2>Course Statistics</h2>
+        <p>Course statistics help administrators review academic course information and its relationship with examination activities.</p>
+        <h3>Course Statistical Categories</h3>
+        <ul>
+            <li>Total registered courses.</li>
+            <li>Department-wise course distribution.</li>
+            <li>Course-wise examination activity.</li>
+            <li>Student participation by course.</li>
+            <li>Course assessment information.</li>
+            <li>Course-wise examination scheduling.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-rubric-analysis">
+    <section id="rubric-statistics-analysis">
+        <h2>Assessment Rubric Statistics</h2>
+        <p>Rubric statistics help administrators review assessment criteria and the structure of examination evaluation.</p>
+        <h3>Rubric Statistical Categories</h3>
+        <ul>
+            <li>Total assessment rubrics.</li>
+            <li>Course-wise rubric distribution.</li>
+            <li>Examination-wise evaluation criteria.</li>
+            <li>Maximum marks distribution.</li>
+            <li>Assessment weightage information.</li>
+            <li>Rubric modification records.</li>
+        </ul>
+        <h3>Assessment Analysis</h3>
+        <p>Assessment statistics can support academic review and help maintain consistent evaluation standards.</p>
+    </section>
+</template>
+
+<template id="statistics-department-analysis">
+    <section id="department-statistics-analysis">
+        <h2>Department-Wise Statistics</h2>
+        <p>Department-wise statistics organize examination management information according to academic departments.</p>
+        <h3>Department Statistical Categories</h3>
+        <ul>
+            <li>Student distribution by department.</li>
+            <li>Examiner distribution by department.</li>
+            <li>Department-wise course information.</li>
+            <li>Department-wise examination activities.</li>
+            <li>Department-wise booking information.</li>
+            <li>Department examination participation.</li>
+        </ul>
+        <p>These statistics can help academic administrators compare departmental requirements and coordinate examination resources.</p>
+    </section>
+</template>
+
+<template id="statistics-performance-analysis">
+    <section id="academic-performance-statistics">
+        <h2>Academic Performance Statistics</h2>
+        <p>Academic performance statistics provide a structured way to review examination outcomes and assessment information.</p>
+        <h3>Performance Statistical Categories</h3>
+        <ul>
+            <li>Examination assessment records.</li>
+            <li>Course-wise examination outcomes.</li>
+            <li>Marks distribution.</li>
+            <li>Assessment criterion performance.</li>
+            <li>Department-wise academic outcomes.</li>
+            <li>Examination result summaries.</li>
+        </ul>
+        <p>Performance information should be reviewed according to institutional assessment policies and applicable student privacy requirements.</p>
+    </section>
+</template>
+
+<template id="statistics-trend-analysis">
+    <section id="examination-trend-analysis">
+        <h2>Examination Trend Analysis</h2>
+        <p>Trend analysis helps administrators understand how examination activities change across different academic periods.</p>
+        <h3>Trend Analysis Categories</h3>
+        <ul>
+            <li>Student registration trends.</li>
+            <li>Examination booking trends.</li>
+            <li>Course examination trends.</li>
+            <li>Department participation trends.</li>
+            <li>Examiner workload trends.</li>
+            <li>Examination slot utilization trends.</li>
+        </ul>
+        <p>Historical information can help administrators identify patterns and improve future examination planning.</p>
+    </section>
+</template>
+
+<template id="statistics-report-management">
+    <section id="statistics-report-information">
+        <h2>Statistical Reports</h2>
+        <p>Statistical reports organize examination-related information into a format suitable for academic review and administrative monitoring.</p>
+        <h3>Report Categories</h3>
+        <ul>
+            <li>Student registration reports.</li>
+            <li>Examiner registration reports.</li>
+            <li>Course administration reports.</li>
+            <li>Examination scheduling reports.</li>
+            <li>Student booking reports.</li>
+            <li>Examination slot reports.</li>
+            <li>Assessment and rubric reports.</li>
+            <li>Department-wise statistical reports.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-data-accuracy">
+    <section id="statistics-data-quality">
+        <h2>Statistical Data Accuracy</h2>
+        <p>Reliable statistics depend on accurate and consistent information maintained throughout the examination management system.</p>
+        <h3>Data Quality Guidelines</h3>
+        <ul>
+            <li>Verify source records before interpreting statistical results.</li>
+            <li>Identify missing or incomplete information.</li>
+            <li>Avoid counting duplicate records.</li>
+            <li>Use consistent category definitions.</li>
+            <li>Review statistical totals against source information.</li>
+            <li>Distinguish between current and historical records.</li>
+            <li>Update reports when source information changes.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-administration-review">
+    <section id="statistics-administration-guidelines">
+        <h2>Statistics Administration and Review</h2>
+        <p>Administrators should review statistical information regularly to understand examination system activity and identify areas that require attention.</p>
+        <h3>Review Activities</h3>
+        <ul>
+            <li>Review student and examiner statistics.</li>
+            <li>Compare examination booking information.</li>
+            <li>Monitor examination slot utilization.</li>
+            <li>Review department-wise activity.</li>
+            <li>Check the accuracy of chart data.</li>
+            <li>Identify unusual changes in statistical values.</li>
+            <li>Use verified information for administrative decisions.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-privacy-security">
+    <section id="statistics-security-guidelines">
+        <h2>Statistics Data Security and Privacy</h2>
+        <p>Statistical information may contain confidential academic and administrative data. Access to detailed reports should follow institutional security policies.</p>
+        <ul>
+            <li>Restrict sensitive reports to authorized users.</li>
+            <li>Protect confidential student assessment information.</li>
+            <li>Avoid unnecessary disclosure of personal records.</li>
+            <li>Use aggregated information where appropriate.</li>
+            <li>Maintain reliable statistical documentation.</li>
+            <li>Follow institutional data retention requirements.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-decision-support">
+    <section id="statistics-decision-support-information">
+        <h2>Statistical Decision Support</h2>
+        <p>Statistical information can support planning and resource allocation within the examination management system.</p>
+        <h3>Administrative Decision Areas</h3>
+        <ul>
+            <li>Planning examination schedules.</li>
+            <li>Managing examination slot capacity.</li>
+            <li>Allocating examiner responsibilities.</li>
+            <li>Understanding student participation.</li>
+            <li>Reviewing departmental examination requirements.</li>
+            <li>Identifying areas requiring administrative improvement.</li>
+        </ul>
+    </section>
+</template>
+
+<template id="statistics-module-support">
+    <section id="statistics-help-and-support">
+        <h2>Statistics and Analytics Support</h2>
+        <p>Statistical support helps administrators understand chart information, report categories, and examination-related data.</p>
+        <h3>Common Statistical Review Issues</h3>
+        <ul>
+            <li>Incorrect or missing chart information.</li>
+            <li>Unexpected statistical totals.</li>
+            <li>Inconsistent category information.</li>
+            <li>Outdated report information.</li>
+            <li>Missing source records.</li>
+            <li>Incorrect interpretation of chart proportions.</li>
+        </ul>
+        <p>Statistical discrepancies should be investigated using the original records and the application's existing reporting procedures.</p>
+    </section>
+</template>
+
+{% endblock %}
